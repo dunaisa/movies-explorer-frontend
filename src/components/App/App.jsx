@@ -1,9 +1,13 @@
+import AboutProject from "../AboutProject/AboutProject";
 import Promo from "../Promo/Promo";
+import Techs from "../Techs/Techs";
 
 function App() {
   return (
     <>
-      <Promo/>
+      <Promo />
+      <AboutProject />
+      <Techs />
     </>
   );
 }
