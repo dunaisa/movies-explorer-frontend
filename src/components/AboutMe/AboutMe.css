@@ -1,0 +1,79 @@
+.about-me {
+  background-color: #FFFFFF;
+  padding: 110px 70px 125px;
+  display: flex;
+  flex-direction: column;
+}
+
+.about-me__container {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-me__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 66px 0 0;
+}
+
+.about-me__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-me__heading {
+  color: #000000;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 50px;
+  font-weight: 400;
+  line-height: 58px;
+  padding: 0;
+  margin: 0;
+}
+
+.about-me__subheading {
+  color: #000000;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 20px;
+  padding: 0;
+  margin: 18px 0 0;
+}
+
+.about-me__description {
+  color: #000000;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  padding: 0;
+  margin: 26px 0 0;
+  max-width: 600px;
+}
+
+.about-me__githab-link {
+  color: #000000;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.94px;
+  padding: 0;
+  margin: 99px 0 0;
+  text-decoration: none;
+  transition: .8s;
+}
+
+.about-me__githab-link:hover {
+  opacity: 0.8;
+}
+
+.about-me__photo {
+  width: 270px;
+  height: 327px;
+  object-fit: cover;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid green;
+}
