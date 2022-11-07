@@ -57,3 +57,42 @@
   height: 18px;
   object-fit: cover;
 }
+
+@media screen and (max-width: 896px) {
+  .portfolio {
+    margin-top: 90px;
+  }
+
+  .portfolio__link-project {
+    font-size: 28px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .portfolio__link-project {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .portfolio {
+    margin-top: 70px;
+  }
+
+  .portfolio__heading {
+    font-size: 14px;
+  }
+
+  .portfolio__items {
+    margin-top: 40px;
+  }
+
+  .portfolio__link-project {
+    line-height: 28px;
+  }
+
+  .portfolio__link-icon {
+    width: 15px;
+    height: 15px;
+  }
+}

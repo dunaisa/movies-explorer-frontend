@@ -11,7 +11,6 @@
   font-size: 22px;
   font-weight: 400;
   line-height: 26.63px;
-  letter-spacing: -4%;
   padding: 0 0 23px;
   margin: 0;
   max-width: 100%;
@@ -29,6 +28,7 @@
 .about-project__description {
   display: flex;
   flex-direction: column;
+  max-width: 550px;
 }
 
 .about-project__heading {
@@ -37,7 +37,6 @@
   font-size: 20px;
   font-weight: 400;
   line-height: 24.2px;
-  letter-spacing: -4%;
   padding: 0;
   margin: 0 0 26px;
 }
@@ -50,7 +49,6 @@
   line-height: 20px;
   padding: 0;
   margin: 0;
-  max-width: 550px;
 }
 
 .table {
@@ -80,17 +78,6 @@
   width: 80%;
 }
 
-.promo__subtitle {
-  color: #FFFFFF;
-  font-family: 'Inter', Arial, sans-serif;
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 15.73px;
-  padding: 0;
-  max-width: 310px;
-  opacity: 0.5;
-}
-
 .table__cell {
   text-align: center;
   padding: 14px 0 0;
@@ -99,4 +86,111 @@
   font-size: 14px;
   font-weight: 500;
   line-height: 17px;
+}
+
+@media screen and (max-width: 1100px) {
+  .about-project__description {
+    max-width: 420px;
+  }
+
+  .about-project__heading {
+    max-width: 350px;
+  }
+}
+
+@media screen and (max-width: 896px) {
+  .about-project {
+    padding: 90px 50px;
+  }
+
+  .about-project__description {
+    max-width: 350px;
+  }
+
+  .about-project__heading {
+    max-width: 320px;
+  }
+
+  .table {
+    margin-top: 93px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .about-project__description {
+    max-width: 320px;
+  }
+
+  .about-project__heading {
+    margin-bottom: 22px;
+  }
+
+  .about-project__subheading {
+    font-size: 12px;
+    line-height: 18px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .about-project__container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 56px;
+  }
+
+  .about-project__description {
+    max-width: 100%;
+  }
+
+  .table__heading_type_back {
+    width: 35%;
+  }
+
+  .table__heading_type_front {
+    width: 65%;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .about-project {
+    padding: 70px 18px;
+  }
+
+  .section__title {
+    font-size: 18px;
+    line-height: 21.78px;
+    padding-bottom: 28px;
+  }
+
+  .about-project__container {
+    margin-top: 60px;
+  }
+
+  .about-project__heading {
+    margin-bottom: 16px;
+    font-size: 18px;
+    line-height: 21.78px;
+  }
+
+  .about-project__subheading {
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  .table {
+    margin-top: 60px;
+  }
+
+  .table__heading {
+    font-size: 11px;
+    line-height: 13.31px;
+    padding: 11px 0;
+  }
+
+  .table__cell {
+    font-size: 11px;
+    line-height: 12.74px;
+    padding: 10px 0;
+  }
 }
