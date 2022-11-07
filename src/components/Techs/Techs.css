@@ -58,6 +58,7 @@
   height: 60px;
   background-color: #E8E8E8;
   border-radius: 10px;
+  text-transform: uppercase;
   /* user-select: none; */
 }
 

@@ -137,10 +137,21 @@
     font-size: 30px;
     line-height: 38px;
     margin-bottom: 24px;
-    max-width: 680px;
+    max-width: 350px;
+  }
+
+  .promo__subtitle {
+    max-width: 260px;
   }
 
   .promo__link {
     margin-bottom: 30px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .promo__title {
+    max-width: 300px;
+    font-size: 28px;
   }
 }
