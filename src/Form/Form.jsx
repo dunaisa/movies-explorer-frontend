@@ -16,23 +16,8 @@ const Form = ({ formHeading, onSubmit, nameLabel, emailLabel, passwordLabel, chi
       <form onSubmit={onSubmit} className="form__container" noValidate>
         <fieldset className="form__fieldset">
 
-          <label htmlFor="name" className="form__field">{nameLabel}
-            <input
-              {...formType('name', {
-                required: "Поле обязательно к заполнению.",
-                minLength: {
-                  value: 5,
-                  message: "Минимальная длина имени 2 символа."
-                }
 
-              })}
-              className="form__input"
-
-              id="name"
-              type="name" />
-
-            <span className="form__text form__text_type_error">{errorShow.name && errorShow.name.message}</span>
-          </label>
+          {children}
 
 
           <label htmlFor="email" className="form__field">{emailLabel}
@@ -81,7 +66,6 @@ const Form = ({ formHeading, onSubmit, nameLabel, emailLabel, passwordLabel, chi
 
       </form>
 
-      {children}
 
 
     </div>

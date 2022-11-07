@@ -1,4 +1,4 @@
-import { Route, Switch, Redirect, Link } from 'react-router-dom';
+import { Route, Switch, Redirect, Link, useHistory } from 'react-router-dom';
 import Register from "../Register/Register";
 import Login from "../Login/Login";
 import AboutMe from "../AboutMe/AboutMe";
@@ -9,6 +9,21 @@ import Techs from "../Techs/Techs";
 import Header from '../Header/Header'
 
 function App() {
+
+  const history = useHistory();
+
+  const handleOnRegister = ({ name, email, password }) => {
+    if ({ name, email, password }) {
+      history.push('/signin');
+    }
+  }
+
+  const handleOnLogin = ({ name, email, password }) => {
+    if ({ name, email, password }) {
+      history.push('/movies');
+    }
+  }
+
   return (
     <Switch>
       <Route exact path="/">
@@ -23,8 +38,14 @@ function App() {
         <Footer />
       </Route>
 
-      <Route exact path="/signin" component={Login} />
-      <Route exact path="/signup" component={Register} />
+      <Route exact path="/signin">
+        <Login onLogin={handleOnLogin} />
+      </Route>
+
+      <Route exact path="/signup">
+        <Register onRegister={handleOnRegister} />
+      </Route>
+
     </Switch>
 
 

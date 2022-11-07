@@ -1,11 +1,44 @@
 import React from 'react';
-import './Login.css';
+import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
+import Form from '../../Form/Form';
 
-const Login = () => {
+const Login = ({ onLogin }) => {
+
+  const {
+    register,
+    formState: {
+      errors,
+      isValid
+    },
+    handleSubmit,
+    reset
+  } = useForm({
+    mode: "onChange"
+  });
+
+  const onSubmit = (values) => {
+    onLogin(values);
+    reset();
+  }
+
   return (
-    <div>
+    <>
+      <Form
+        typeOfForm={register}
+        errors={errors}
+        isValid={isValid}
+        formHeading="Рады видеть!"
+        onSubmit={handleSubmit(onSubmit)}
+        emailLabel="Электронный адрес"
+        passwordLabel="Пароль">
 
-    </div>
+      </Form>
+      <div className="form-reroute">
+        <span className="form-reroute__text">Ещё не зарегистрированы?</span>
+        <Link to="/signup" className="form-reroute__link">Регистрация</Link>
+      </div>
+    </>
   );
 }
 
