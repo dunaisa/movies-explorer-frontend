@@ -34,7 +34,9 @@ const Register = ({ onRegister }) => {
         emailLabel="Электронный адрес"
         passwordLabel="Пароль">
 
-        <label htmlFor="name" className="form__field">Имя
+        <div className="input-container">
+
+
           <input
             {...register('name', {
               required: "Поле обязательно к заполнению.",
@@ -45,12 +47,15 @@ const Register = ({ onRegister }) => {
 
             })}
             className="form__input"
-
+            placeholder=" "
             id="name"
             type="text" />
+          <div class="input-label"></div>
+          <label htmlFor="name" for="name" className="form__field">Имя</label>
 
           <span className="form__text form__text_type_error">{errors.name && errors.name.message}</span>
-        </label>
+
+        </div>
       </Form>
 
       <div className="form-reroute">

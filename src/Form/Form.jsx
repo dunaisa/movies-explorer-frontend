@@ -19,8 +19,8 @@ const Form = ({ formHeading, onSubmit, nameLabel, emailLabel, passwordLabel, chi
 
           {children}
 
+          <div className="input-container">
 
-          <label htmlFor="email" className="form__field">{emailLabel}
             <input
               {...formType('email', {
                 required: "Поле обязательно к заполнению.",
@@ -31,18 +31,20 @@ const Form = ({ formHeading, onSubmit, nameLabel, emailLabel, passwordLabel, chi
 
               })}
               className="form__input"
-
+              placeholder=" "
               id="email"
               type="email" />
+            <label htmlFor="email" className="form__field">{emailLabel}</label>
 
             <span className="form__text form__text_type_error">{errorShow.email && errorShow.email.message}</span>
-          </label>
+
+          </div>
 
 
+          <div className="input-container">
 
-          <label htmlFor="password" className="form__field">{passwordLabel}
             <input
-              className="form__input"
+
               {...formType('password', {
                 required: "Поле обязательно к заполнению.",
                 minLength: {
@@ -50,12 +52,15 @@ const Form = ({ formHeading, onSubmit, nameLabel, emailLabel, passwordLabel, chi
                   message: "Минимальная длина пароля 5 символов."
                 }
               })}
+
+              className="form__input"
+              placeholder=" "
               id="password"
               type="password" />
-
+            <label htmlFor="password" className="form__field">{passwordLabel}</label>
             <span className="form__text form__text_type_error">{errorShow.password && errorShow.password.message}</span>
-          </label>
 
+          </div>
 
         </fieldset>
 
