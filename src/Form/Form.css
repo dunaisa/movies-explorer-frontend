@@ -2,7 +2,7 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  padding: 70px 0;
+  padding: 70px 30px 0;
   max-width: 396px;
 }
 
@@ -24,6 +24,10 @@
 .form__container {
   margin: 40px 0 0;
   border: none;
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .form__fieldset {
@@ -59,11 +63,12 @@
   border-radius: 3px;
   padding: 14px 0;
   margin: 69px 0 0;
+  cursor: pointer;
 }
 
 .form__btn_disabled {
-  background-color: grey;
-  opacity: 0.8;
+  background-color: #3456F3;
+  opacity: 0.6;
 }
 
 .form-reroute {
@@ -138,4 +143,34 @@
 .form__input:focus~.form__field {
   color: #A0A0A0;
   left: 0;
+}
+
+@media screen and (max-width: 425px) {
+  .form-reroute {
+    margin-top: 14px;
+    margin-bottom: 30px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .form {
+    align-items: center;
+    padding-top: 56px;
+  }
+
+  .form__container {
+    width: 260px;
+    margin-top: 80px;
+    height: 468px;
+  }
+
+  .form-reroute__text {
+    font-size: 12px;
+    line-height: 14.52px;
+  }
+
+  .form-reroute__link {
+    font-size: 12px;
+    line-height: 14.52px;
+  }
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import './Form.css';
 import Logo from '../images/logo.svg';
 
-const Form = ({ formHeading, onSubmit, nameLabel, emailLabel, passwordLabel, children, typeOfForm, errors, isValid }) => {
+const Form = ({ formHeading, onSubmit, nameLabel, emailLabel, passwordLabel, children, typeOfForm, errors, isValid, textBtn }) => {
 
   const formType = typeOfForm;
   const errorShow = errors;
@@ -67,7 +67,7 @@ const Form = ({ formHeading, onSubmit, nameLabel, emailLabel, passwordLabel, chi
         <button
           type="submit"
           className={`form__btn ${!btnValidation ? "form__btn_disabled" : ''}`}
-          disabled={!btnValidation}>Зарегистрироваться</button>
+          disabled={!btnValidation}>{textBtn}</button>
 
       </form>
 

@@ -32,7 +32,8 @@ const Register = ({ onRegister }) => {
         onSubmit={handleSubmit(onSubmit)}
         nameLabel="Имя"
         emailLabel="Электронный адрес"
-        passwordLabel="Пароль">
+        passwordLabel="Пароль"
+        textBtn="Зарегистрироваться">
 
         <div className="input-container">
 
@@ -62,6 +63,7 @@ const Register = ({ onRegister }) => {
         <span className="form-reroute__text">Уже зарегистрированы?</span>
         <Link to="/signin" className="form-reroute__link">Войти</Link>
       </div>
+
     </>
   );
 }

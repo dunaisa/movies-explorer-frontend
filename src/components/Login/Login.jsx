@@ -31,7 +31,8 @@ const Login = ({ onLogin }) => {
         formHeading="Рады видеть!"
         onSubmit={handleSubmit(onSubmit)}
         emailLabel="Электронный адрес"
-        passwordLabel="Пароль">
+        passwordLabel="Пароль"
+        textBtn="Войти">
 
       </Form>
       <div className="form-reroute">
