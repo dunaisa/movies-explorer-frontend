@@ -7,6 +7,7 @@ import Footer from "../Footer/Footer";
 import Promo from "../Promo/Promo";
 import Techs from "../Techs/Techs";
 import Header from '../Header/Header'
+import Movies from '../Movies/Movies';
 
 function App() {
 
@@ -27,10 +28,19 @@ function App() {
   return (
     <Switch>
       <Route exact path="/">
-        <Header>
-          <Link className="header__link header__link_type_signup" to="/signup">Регистрация</Link>
-          <Link className="header__link header__link_type_signin" to="/signin">Войти</Link>
+
+        <Header headerClassName="header header_type_intro">
+          <ul className="header__items">
+            <li className="header__item">
+              <Link className="header__link header__link_type_signup" to="/signup">Регистрация</Link>
+            </li>
+
+            <li className="header__item">
+              <Link className="header__link header__link_type_signin" to="/signin">Войти</Link>
+            </li>
+          </ul>
         </Header>
+
         <Promo />
         <AboutProject />
         <Techs />
@@ -44,6 +54,10 @@ function App() {
 
       <Route exact path="/signup">
         <Register onRegister={handleOnRegister} />
+      </Route>
+
+      <Route exact path="/movies">
+        <Movies />
       </Route>
 
     </Switch>

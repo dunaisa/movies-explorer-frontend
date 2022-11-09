@@ -3,9 +3,9 @@ import './Header.css';
 import logo from '../../images/logo.svg';
 // import { Link } from 'react-router-dom';
 
-const Header = ({ children }) => {
+const Header = ({ children, headerClassName }) => {
   return (
-    <div className="header">
+    <div className={headerClassName}>
       <img src={logo} alt="Логотип" className="header__logo" />
       <nav className="header__menu">
         {children}
