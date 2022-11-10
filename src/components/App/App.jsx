@@ -28,7 +28,6 @@ function App() {
   return (
     <Switch>
       <Route exact path="/">
-
         <Header headerClassName="header header_type_intro">
           <ul className="header__items">
             <li className="header__item">
@@ -40,7 +39,6 @@ function App() {
             </li>
           </ul>
         </Header>
-
         <Promo />
         <AboutProject />
         <Techs />
