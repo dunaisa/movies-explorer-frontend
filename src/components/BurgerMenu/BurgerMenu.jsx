@@ -12,16 +12,16 @@ const BurgerMenu = ({ active }) => {
       <div className="header-burger-menu__container">
         <ul className="header-burger-menu__items">
 
-          <li className="header-burger-menu__item">
-            <NavLink className="header-burger-menu__link header-burger-menu__link_type_movies" activeClassName="header__link_active" to="/">Главная</NavLink>
+          <li className="header-burger-menu__item header-burger-menu__item_type_movie">
+            <NavLink className="header-burger-menu__link header-burger-menu__link_type_movies" activeClassName="header-burger-menu__link_active" exact to="/">Главная</NavLink>
           </li>
 
-          <li className="header-burger-menu__item">
-            <NavLink className="header-burger-menu__link header-burger-menu__link_type_movies" activeClassName="header__link_active" to="/movies">Фильмы</NavLink>
+          <li className="header-burger-menu__item header-burger-menu__item_type_movie">
+            <NavLink className="header-burger-menu__link header-burger-menu__link_type_movies" activeClassName="header-burger-menu__link_active" to="/movies">Фильмы</NavLink>
           </li>
 
-          <li className="header-burger-menu__item">
-            <NavLink className="header-burger-menu__link header-burger-menu__link_type_movies" activeClassName="header__link_active" to="/saved-movies">Сохранённые фильмы</NavLink>
+          <li className="header-burger-menu__item header-burger-menu__item_type_movie">
+            <NavLink className="header-burger-menu__link header-burger-menu__link_type_movies" activeClassName="header-burger-menu__link_active" to="/saved-movies">Сохранённые фильмы</NavLink>
           </li>
 
           <li className="header-burger-menu__item header-burger-menu__item_type_profile">
