@@ -34,8 +34,9 @@
   border-radius: 8px;
   border: none;
   background-color: #3456F3;
-  margin-left: 10px;
+  margin: 0 0 0 10px;
   cursor: pointer;
+  padding: 7px;
 }
 
 .search-form__btn-icon {
@@ -103,9 +104,15 @@
   transition: 300ms;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 896px) {
   .search-form {
     padding-left: 30px;
     padding-right: 30px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .search-form__input {
+    padding: 13px;
   }
 }

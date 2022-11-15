@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import Form from '../../Form/Form';
+import Form from '../Form/Form';
 
 const Register = ({ onRegister }) => {
 
@@ -51,7 +51,7 @@ const Register = ({ onRegister }) => {
             placeholder=" "
             id="name"
             type="text" />
-          <div class="input-label"></div>
+          <div className="input-label"></div>
           <label htmlFor="name" for="name" className="form__field">Имя</label>
 
           <span className="form__text form__text_type_error">{errors.name && errors.name.message}</span>

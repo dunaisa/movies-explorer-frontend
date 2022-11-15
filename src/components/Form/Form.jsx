@@ -1,6 +1,6 @@
 import React from 'react';
 import './Form.css';
-import Logo from '../images/logo.svg';
+import Logo from '../../images/logo.svg';
 
 const Form = ({ formHeading, onSubmit, nameLabel, emailLabel, passwordLabel, children, typeOfForm, errors, isValid, textBtn }) => {
 

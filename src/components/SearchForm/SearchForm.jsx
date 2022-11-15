@@ -14,7 +14,7 @@ const SearchForm = () => {
 
       <div className="thumbler">
         <input type="checkbox" className="thumbler__input" id="thumbler" />
-        <label htmlFor="thumbler" for="thumbler" className="thumbler__label">Короткометражки</label>
+        <label htmlFor="thumbler" className="thumbler__label">Короткометражки</label>
       </div>
 
     </div>

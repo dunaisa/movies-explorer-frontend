@@ -1,13 +1,11 @@
-import { Route, Switch, Redirect, Link, useHistory } from 'react-router-dom';
+import { Route, Switch, Link, useHistory } from 'react-router-dom';
 import Register from "../Register/Register";
 import Login from "../Login/Login";
-import AboutMe from "../AboutMe/AboutMe";
-import AboutProject from "../AboutProject/AboutProject";
 import Footer from "../Footer/Footer";
-import Promo from "../Promo/Promo";
-import Techs from "../Techs/Techs";
 import Header from '../Header/Header'
 import Movies from '../Movies/Movies';
+import Main from '../Main/Main';
+import Profile from '../Profile/Profile';
 
 function App() {
 
@@ -39,10 +37,7 @@ function App() {
             </li>
           </ul>
         </Header>
-        <Promo />
-        <AboutProject />
-        <Techs />
-        <AboutMe />
+        <Main />
         <Footer />
       </Route>
 
@@ -56,6 +51,10 @@ function App() {
 
       <Route exact path="/movies">
         <Movies />
+      </Route>
+
+      <Route exact path="/profile">
+        <Profile />
       </Route>
 
     </Switch>

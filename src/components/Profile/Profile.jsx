@@ -1,13 +1,13 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import './Profile.css';
 import Header from '../Header/Header';
-import './Movies.css';
-import profileIcon from '../../images/profile-icon.svg';
-import SearchForm from '../SearchForm/SearchForm';
 import BurgerMenu from '../BurgerMenu/BurgerMenu';
-import MoviesCardList from '../MoviesCardList/MoviesCardList';
+import profileIcon from '../../images/profile-icon.svg';
+import EditProfileForm from '../EditProfileForm/EditProfileForm';
 
-const Movies = () => {
+
+const Profile = () => {
 
   const [menuActive, setMenuActive] = React.useState(false);
   const [crossBtn, setCrossBtn] = React.useState(false);
@@ -46,11 +46,10 @@ const Movies = () => {
 
       </Header>
 
-      <SearchForm />
+      <EditProfileForm />
 
-      <MoviesCardList />
     </>
   );
 }
 
-export default Movies;
+export default Profile;

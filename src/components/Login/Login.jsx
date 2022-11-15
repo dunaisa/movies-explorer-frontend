@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import Form from '../../Form/Form';
+import Form from '../Form/Form';
 
 const Login = ({ onLogin }) => {
 
