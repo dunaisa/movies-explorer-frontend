@@ -1,20 +1,16 @@
 import React from 'react';
 import './MoviesCardList.css';
-import MoviesCard from '../MoviesCard/MoviesCard';
-import movieImage from '../../images/movie-image/movie-image.jpg';
 
 
-const MoviesCardList = () => {
+const MoviesCardList = ({ children }) => {
   return (
-    <div className="movies">
+    <section className="movies">
       <ul className="movies__container">
-        <MoviesCard imageSrc={movieImage} movieTitle="33 слова о дизайне" movieDuration="1ч 47м" />
-        <MoviesCard imageSrc={movieImage} movieTitle="33 слова о дизайне" movieDuration="1ч 47м" />
-        <MoviesCard imageSrc={movieImage} movieTitle="33 слова о дизайне" movieDuration="1ч 47м" />
-        <MoviesCard imageSrc={movieImage} movieTitle="33 слова о дизайне" movieDuration="1ч 47м" />
-        <MoviesCard imageSrc={movieImage} movieTitle="33 слова о дизайне" movieDuration="1ч 47м" />
+        {children}
       </ul>
-    </div>
+
+      <button className="movies__btn">Еще</button>
+    </section>
   );
 }
 

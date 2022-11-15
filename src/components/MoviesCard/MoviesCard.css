@@ -40,6 +40,10 @@
   line-height: 15.73px;
   padding: 0;
   margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 260px;
 }
 
 .movie__like-btn {
@@ -72,6 +76,23 @@
   padding: 0;
   margin: 0;
 }
+
+.movie__delete-btn {
+  align-self: center;
+  background: transparent;
+  background-image: url(../../images/delete-card-btn.svg);
+  background-repeat: no-repeat;
+  background-size: 14px 12px;
+  border: none;
+  cursor: pointer;
+  height: 12px;
+  justify-self: center;
+  margin: 0;
+  padding: 0;
+  transition: .8s;
+  width: 14px;
+}
+
 
 @media screen and (max-width: 896px) {
   .movie {

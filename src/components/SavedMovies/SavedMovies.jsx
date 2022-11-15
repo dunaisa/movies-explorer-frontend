@@ -1,26 +1,31 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import './SavedMovies.css';
 import Header from '../Header/Header';
-import './Movies.css';
 import profileIcon from '../../images/profile-icon.svg';
 import SearchForm from '../SearchForm/SearchForm';
 import BurgerMenu from '../BurgerMenu/BurgerMenu';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import movieImage from '../../images/movie-image/movie-image.jpg';
-import movieBanksy from '../../images/movie-image/banksy.jpg';
 import yearsOfDesign from '../../images/movie-image/movie-image-100-years.jpg';
 import movieBasciya from '../../images/movie-image/basciyapic.jpg';
-import runningIsFreedom from '../../images/movie-image/running-is-freedom.jpg';
-import booksalers from '../../images/movie-image/book-salers.jpg';
-import Germany from '../../images/movie-image/Germany.jpg';
-import GimmeDanger from '../../images/movie-image/Gimme-Danger.jpg';
 import Footer from '../Footer/Footer';
 
-const Movies = () => {
+const SavedMovies = () => {
 
   const [menuActive, setMenuActive] = React.useState(false);
   const [crossBtn, setCrossBtn] = React.useState(false);
+
+  const [deleteBtnShown, setDeleteBtnShown] = React.useState(false);
+
+  const handleAddDeleteBtn = () => {
+    setDeleteBtnShown(true)
+  }
+
+  const handleRemoveDeleteBtn = () => {
+    setDeleteBtnShown(false)
+  }
 
   return (
     <>
@@ -59,35 +64,40 @@ const Movies = () => {
       <SearchForm />
 
       <MoviesCardList>
-        <MoviesCard imageSrc={movieImage} movieTitle="33 слова о дизайне" movieDuration="1ч 47м">
-          <button className="movie__like-btn"></button>
+        <MoviesCard
+          imageSrc={movieImage}
+          movieTitle="33 слова о дизайне"
+          movieDuration="1ч 47м"
+          onMouseEnter={handleAddDeleteBtn}
+          onMouseLeave={handleRemoveDeleteBtn}>
+          {deleteBtnShown && (<button className="movie__delete-btn"></button>)}
         </MoviesCard>
-        <MoviesCard imageSrc={yearsOfDesign} movieTitle="Киноальманах «100 лет дизайна»" movieDuration="1ч 47м">
-          <button className="movie__like-btn"></button>
+
+        <MoviesCard
+          imageSrc={yearsOfDesign}
+          movieTitle="Киноальманах «100 лет дизайна»"
+          movieDuration="1ч 47м"
+          onMouseEnter={handleAddDeleteBtn}
+          onMouseLeave={handleRemoveDeleteBtn}>
+          {deleteBtnShown && (<button className="movie__delete-btn"></button>)}
+
         </MoviesCard>
-        <MoviesCard imageSrc={movieBanksy} movieTitle="В погоне за Бенкси" movieDuration="1ч 47м">
-          <button className="movie__like-btn"></button>
+
+        <MoviesCard
+          imageSrc={movieBasciya}
+          movieTitle="Баския: Взрыв реальности"
+          movieDuration="1ч 47м"
+          onMouseEnter={handleAddDeleteBtn}
+          onMouseLeave={handleRemoveDeleteBtn}>
+          {deleteBtnShown && (<button className="movie__delete-btn"></button>)}
         </MoviesCard>
-        <MoviesCard imageSrc={movieBasciya} movieTitle="Баския: Взрыв реальности" movieDuration="1ч 47м">
-          <button className="movie__like-btn"></button>
-        </MoviesCard>
-        <MoviesCard imageSrc={runningIsFreedom} movieTitle="Бег это свобода" movieDuration="1ч 47м">
-          <button className="movie__like-btn"></button>
-        </MoviesCard>
-        <MoviesCard imageSrc={booksalers} movieTitle="Книготорговцы" movieDuration="1ч 47м">
-          <button className="movie__like-btn"></button>
-        </MoviesCard>
-        <MoviesCard imageSrc={Germany} movieTitle="Когда я думаю о Германии ночью" movieDuration="1ч 47м">
-          <button className="movie__like-btn"></button>
-        </MoviesCard>
-        <MoviesCard imageSrc={GimmeDanger} movieTitle="Gimme Danger: История Игги и The Stooges" movieDuration="1ч 47м">
-          <button className="movie__like-btn"></button>
-        </MoviesCard>
+
       </MoviesCardList>
 
       <Footer />
+
     </>
   );
 }
 
-export default Movies;
+export default SavedMovies;

@@ -6,7 +6,7 @@ import PromoImage from '../../images/promo-image.png'
 const Promo = () => {
   return (
     <>
-      <div className="promo">
+      <section className="promo">
         <div className="promo__container">
           <div className="promo__description">
             <h1 className="promo__title">Учебный проект студента факультета Веб&#8209;разработки.</h1>
@@ -15,7 +15,7 @@ const Promo = () => {
           <img src={PromoImage} alt="Картинка для промо части" className="promo__image" />
         </div>
         <a href="#" className="promo__link">Узнать больше</a>
-      </div>
+      </section>
     </>
   );
 }

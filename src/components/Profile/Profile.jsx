@@ -17,7 +17,7 @@ const Profile = () => {
       <Header headerClassName="header header-main header_type_movies">
         <ul className="header-main__items">
           <li className="header-main__item">
-            <NavLink className="header-main__link header-main__link_type_movies" activeClassName="" to="/mpvies">Фильмы</NavLink>
+            <NavLink className="header-main__link header-main__link_type_movies" activeClassName="" to="/movies">Фильмы</NavLink>
           </li>
 
           <li className="header-main__item">

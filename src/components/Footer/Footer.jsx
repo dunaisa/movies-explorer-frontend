@@ -16,7 +16,7 @@ const Footer = () => {
             <a href="https://practicum.yandex.ru/" className="footer__item-link" target="_blank" rel="noreferrer">Яндекс.Практикум</a>
           </li>
           <li className="footer__item">
-            <a href="#" className="footer__item-link" target="_blank" rel="noreferrer">Github</a>
+            <a href="https://github.com/dunaisa" className="footer__item-link" target="_blank" rel="noreferrer">Github</a>
           </li>
         </ul>
       </div>

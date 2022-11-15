@@ -6,6 +6,8 @@ import Header from '../Header/Header'
 import Movies from '../Movies/Movies';
 import Main from '../Main/Main';
 import Profile from '../Profile/Profile';
+import SavedMovies from '../SavedMovies/SavedMovies';
+import PageNotFound from '../PageNotFound/PageNotFound';
 
 function App() {
 
@@ -39,6 +41,7 @@ function App() {
         </Header>
         <Main />
         <Footer />
+        <PageNotFound />
       </Route>
 
       <Route exact path="/signin">
@@ -53,13 +56,15 @@ function App() {
         <Movies />
       </Route>
 
+      <Route exact path="/saved-movies">
+        <SavedMovies />
+      </Route>
+
       <Route exact path="/profile">
         <Profile />
       </Route>
 
     </Switch>
-
-
   );
 }
 

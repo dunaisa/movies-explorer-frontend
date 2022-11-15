@@ -25,7 +25,7 @@ const BurgerMenu = ({ active }) => {
           </li>
 
           <li className="header-burger-menu__item header-burger-menu__item_type_profile">
-            <NavLink className="header-burger-menu__link header-burger-menu__link_type_profile" activeClassName="header-burger-menu__link_active" to="/profile">Аккаунт</NavLink>
+            <NavLink className="header-burger-menu__link header-burger-menu__link_type_profile" to="/profile">Аккаунт</NavLink>
             <img src={profileIcon} alt="Иконка ссылки на профиль" className="header-burger-menu__link header-burger-menu__link_type_icon-profile" />
           </li>
 
