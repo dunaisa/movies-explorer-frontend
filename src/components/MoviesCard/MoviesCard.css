@@ -1,0 +1,117 @@
+.movie {
+  border-radius: 6px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 203px 78px;
+  list-style: none;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  box-shadow: 0 4px 30px 0 rgba(0, 0, 0, 0.08);
+}
+
+.movie__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.movie__info {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  box-sizing: border-box;
+  justify-content: space-between;
+}
+
+.movie__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.movie__heading {
+  color: #000000;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 15.73px;
+  padding: 0;
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 260px;
+}
+
+.movie__like-btn {
+  align-self: center;
+  background: transparent;
+  background-image: url(../../images/like-inactive.svg);
+  background-repeat: no-repeat;
+  background-size: 14px 12px;
+  border: none;
+  cursor: pointer;
+  height: 12px;
+  justify-self: center;
+  margin: 0;
+  padding: 0;
+  transition: .4s;
+  width: 14px;
+}
+
+.movie__like-btn_active {
+  background-image: url(../../images/like-active.svg);
+  transition: 0s;
+}
+
+.movie__duration {
+  color: #A0A0A0;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 13.31px;
+  padding: 0;
+  margin: 0;
+}
+
+.movie__delete-btn {
+  align-self: center;
+  background: transparent;
+  background-image: url(../../images/delete-card-btn.svg);
+  background-repeat: no-repeat;
+  background-size: 14px 12px;
+  border: none;
+  cursor: pointer;
+  height: 12px;
+  justify-self: center;
+  margin: 0;
+  padding: 0;
+  transition: .8s;
+  width: 14px;
+}
+
+
+@media screen and (max-width: 896px) {
+  .movie {
+    grid-template-rows: 190px 72px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .movie {
+    grid-template-rows: 168px 69px;
+  }
+
+  .movie__info {
+    padding: 14px;
+  }
+
+  .movie__heading {
+    font-size: 12px;
+    line-height: 14.52px;
+    max-width: 220px;
+  }
+}

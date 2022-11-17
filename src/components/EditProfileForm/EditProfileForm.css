@@ -1,0 +1,131 @@
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 74px auto 70px;
+  padding: 0 30px;
+}
+
+.edit-form__heading {
+  color: #000000;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 29.05px;
+  padding: 0;
+}
+
+.edit-form__container {
+  display: flex;
+  flex-direction: column;
+  margin: 123px 0 0;
+  padding: 0;
+  width: 410px;
+}
+
+.edit-form__fieldset {
+  padding: 0;
+  border: none;
+  margin: 0;
+  width: 100%;
+}
+
+.edit-form__field {
+  padding: 17px 0 16px;
+  border-bottom: 1px solid #E8E8E8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.edit-form__field:last-child {
+  border: none;
+}
+
+.edit-form__label {
+  color: #000000;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 13.31px;
+  padding: 0;
+}
+
+.edit-form__text_type_error {
+  color: #FF3055;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 12.1px;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: calc(100% + 3px);
+  left: 0;
+}
+
+.edit-form__input {
+  outline: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: end;
+  color: #000000;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 13.31px;
+}
+
+.edit-form__btn {
+  margin: 220px 0 0;
+  border: none;
+  background: transparent;
+  color: #000000;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 15.73px;
+}
+
+.edit-form__btn_disabled {
+  opacity: 0.6;
+}
+
+.edit-form__signout {
+  margin: 16px 0 0;
+  border: none;
+  background: transparent;
+  color: #FF3055;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 15.73px;
+}
+
+@media screen and (max-width: 768px) {
+  .edit-form__container {
+    margin-top: 90px;
+  }
+
+  .edit-form__btn {
+    margin-top: 200px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .edit-form {
+    margin-top: 70px;
+    margin-bottom: 40px;
+  }
+
+  .edit-form__container {
+    margin-top: 80px;
+    max-width: 100%;
+  }
+
+  .edit-form__btn {
+    margin-top: 370px;
+  }
+}
