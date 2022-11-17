@@ -75,7 +75,6 @@
   object-fit: cover;
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid green;
 }
 
 @media screen and (max-width: 1024px) {

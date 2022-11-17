@@ -5,9 +5,9 @@ import btnIcon from '../../images/search-form-icon.svg';
 const SearchForm = () => {
   return (
     <div className="search-form">
-      <form action="post" className="search-form__container">
+      <form action="post" className="search-form__container" required>
         <input type="text" className="search-form__input" placeholder="Фильмы" />
-        <button className="search-form__btn">
+        <button className="search-form__btn" type="button">
           <img src={btnIcon} alt="" className="search-form__btn-icon" />
         </button>
       </form>

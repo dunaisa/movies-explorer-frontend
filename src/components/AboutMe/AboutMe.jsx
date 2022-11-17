@@ -1,6 +1,7 @@
 import React from 'react';
 import "./AboutMe.css";
 import Portfolio from '../Portfolio/Portfolio';
+import PortfolioPhoto from '../../images/portfolio-photo.jpg';
 
 const AboutMe = () => {
   return (
@@ -14,7 +15,7 @@ const AboutMe = () => {
             <p className="about-me__description">Я родилась и живу в Сергиевом Посаде, закончила факультет экономики РГСУ. Я люблю слушать музыку, а ещё увлекаюсь чтением и фитнесом. Веб-разработка привлекла тем, что результаты работы можно визуально оценить и протестировать по мере выполнения задач. Также явным плюсом для меня была возможность удаленной работы - отсутсвие модели &#171;дом-работа-дом&#187;, ощущение свободы и уменьшение шансов выгорания или усталости. Готова прикладывать все усилия, чтобы быть полезным звеном организации.</p>
             <a href="https://github.com/dunaisa" className="about-me__githab-link" target="_blank" rel="noreferrer">Github</a>
           </div>
-          <img src="" alt="Фото" className="about-me__photo" />
+          <img src={PortfolioPhoto} alt="Фото" className="about-me__photo" />
         </div>
 
         <Portfolio />

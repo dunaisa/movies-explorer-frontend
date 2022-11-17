@@ -6,7 +6,9 @@ const Header = ({ children, headerClassName }) => {
 
   return (
     <div className={headerClassName}>
-      <img src={logo} alt="Логотип" className="header__logo" />
+      <a href="/" className="header__link-logo">
+        <img src={logo} alt="Логотип" className="header__logo" />
+      </a>
       <nav className="header__menu">
         {children}
       </nav>
