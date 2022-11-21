@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import './SearchForm.css';
 import btnIcon from '../../images/search-form-icon.svg';
 
-const SearchForm = ({ onSearch, onChange }) => {
+const SearchForm = ({ onSearch, onChange, query, isThumblerActive }) => {
 
   const {
     register,
@@ -26,18 +26,16 @@ const SearchForm = ({ onSearch, onChange }) => {
     <div className="search-form">
       <form action="post" className="search-form__container" onSubmit={handleSubmit(onSearchSubmit)} noValidate>
 
-        {/* <input type="text" className="search-form__input" placeholder="Фильмы" name="movie" required /> */}
-
-
         <input
           {...register('text', {
-            required: "Поле обязательно к заполнению.",
+            required: "Нужно ввести ключевое слово.",
 
           })}
           className="search-form__input"
           placeholder="Фильмы"
           id="text"
           type="text"
+          value={query}
           onChange={onChange} />
         <span className="search-form__text search-form__text_type_error">{errors.text && errors.text.message}</span>
 
@@ -48,7 +46,7 @@ const SearchForm = ({ onSearch, onChange }) => {
       </form>
 
       <div className="thumbler">
-        <input type="checkbox" className="thumbler__input" id="thumbler" />
+        <input type="checkbox" className="thumbler__input" name="thumbler" id="thumbler" isThumblerActive={isThumblerActive} />
         <label htmlFor="thumbler" className="thumbler__label">Короткометражки</label>
       </div>
 

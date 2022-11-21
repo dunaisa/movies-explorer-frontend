@@ -9,7 +9,7 @@ const MoviesCard = ({ movie, onMouseEnter, onMouseLeave }) => {
   return (
     <li className="movie" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} >
       <a href={trailerLink} className="movie__link" target="_blank" rel="noreferrer">
-        <img src={` https://api.nomoreparties.co/${image.url}`} alt={nameRU} className="movie__image" />
+        <img src={`https://api.nomoreparties.co/${image.url}`} alt={nameRU} className="movie__image" />
       </a>
       <div className="movie__info">
         <div className="movie__content">

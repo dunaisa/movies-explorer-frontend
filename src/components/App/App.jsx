@@ -44,7 +44,6 @@ function App() {
         setMovies(res);
       })
       .catch((err) => console.log(`${err}`))
-
   }, [])
 
   const [query, setQuery] = useState('');
@@ -53,7 +52,8 @@ function App() {
     setQuery(e.target.value)
   }
 
-  const [arr, setArr] = useState([]);
+  const [filtredMovieArray, seFiltredMovieArray] = useState([]);
+  const [isThumblerActive, setIsThumblerActive] = useState(false);
 
   // const searchKey = ["nameRU"]
 
@@ -63,8 +63,23 @@ function App() {
   )
 
   const handleMovieSearch = () => {
-    setArr(filteredMovies)
+    localStorage.setItem('query', `${query}`);
+    localStorage.setItem('movie', JSON.stringify(filteredMovies));
+    localStorage.setItem('thumbler', false);
+    seFiltredMovieArray(filteredMovies)
   }
+
+  useEffect(() => {
+    const localMovie = localStorage.getItem('movie');
+    const localQuery = localStorage.getItem('query');
+    const localThumbler = localStorage.getItem('thumbler');
+    console.log(localQuery)
+    if (localMovie) {
+      setQuery(localQuery)
+      seFiltredMovieArray(JSON.parse(localMovie))
+      setIsThumblerActive(localThumbler)
+    }
+  }, [])
 
   return (
     <Switch>
@@ -125,8 +140,8 @@ function App() {
           </div>
 
         </Header>
-        <SearchForm onSearch={handleMovieSearch} onChange={handleInputChange} />
-        <Movies moviesList={arr} />
+        <SearchForm onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} />
+        <Movies moviesList={filtredMovieArray} />
       </Route>
 
       <Route exact path="/saved-movies">
