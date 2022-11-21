@@ -1,14 +1,49 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
 import './SearchForm.css';
 import btnIcon from '../../images/search-form-icon.svg';
 
-const SearchForm = () => {
+const SearchForm = ({ onSearch, onChange }) => {
+
+  const {
+    register,
+    formState: {
+      errors,
+      isValid
+    },
+    handleSubmit,
+    reset
+  } = useForm({
+    mode: "onChange"
+  });
+
+  const onSearchSubmit = (values) => {
+    onSearch(values);
+    reset();
+  }
+
   return (
     <div className="search-form">
-      <form action="post" className="search-form__container" required>
-        <input type="text" className="search-form__input" placeholder="Фильмы" />
-        <button className="search-form__btn" type="button">
-          <img src={btnIcon} alt="" className="search-form__btn-icon" />
+      <form action="post" className="search-form__container" onSubmit={handleSubmit(onSearchSubmit)} noValidate>
+
+        {/* <input type="text" className="search-form__input" placeholder="Фильмы" name="movie" required /> */}
+
+
+        <input
+          {...register('text', {
+            required: "Поле обязательно к заполнению.",
+
+          })}
+          className="search-form__input"
+          placeholder="Фильмы"
+          id="text"
+          type="text"
+          onChange={onChange} />
+        <span className="search-form__text search-form__text_type_error">{errors.text && errors.text.message}</span>
+
+
+        <button className="search-form__btn" type="post">
+          <img src={btnIcon} alt="Кнопка поиска" className="search-form__btn-icon" />
         </button>
       </form>
 

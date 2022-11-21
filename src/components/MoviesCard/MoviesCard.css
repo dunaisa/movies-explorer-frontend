@@ -18,6 +18,10 @@
   object-fit: cover;
 }
 
+.movie__link {
+  text-decoration: none;
+}
+
 .movie__info {
   display: flex;
   flex-direction: column;
