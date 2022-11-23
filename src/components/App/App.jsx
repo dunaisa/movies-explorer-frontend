@@ -40,7 +40,7 @@ function App() {
   }
 
   const [movies, setMovies] = useState([]);
-  // const [moviesNotFind, setMoviesNotFind] = useState(false);
+  const [moviesNotFind, setMoviesNotFind] = useState(false);
 
   useEffect(() => {
 
@@ -86,24 +86,30 @@ function App() {
 
   const handleMovieSearch = () => {
     localStorage.setItem('query', `${query}`);
-    localStorage.setItem('movie', JSON.stringify(filteredMovies));
+    localStorage.setItem('movies', JSON.stringify(filteredMovies));
     localStorage.setItem('thumbler', JSON.stringify(isThumblerActive));
 
     setFiltredMovieArray(filteredMovies)
   }
 
+  const localMovie = localStorage.getItem('movies');
+  const localQuery = localStorage.getItem('query');
+  const localThumbler = Boolean(localStorage.getItem('thumbler'));
+
   useEffect(() => {
-    const localMovie = localStorage.getItem('movie');
-    const localQuery = localStorage.getItem('query');
-    const localThumbler = Boolean(localStorage.getItem('thumbler'));
-    if (localMovie === null) {
+
+    if (localMovie === null && localQuery === null) {
       setFiltredMovieArray([])
+    } else if (JSON.parse(localMovie).length === 0 && localQuery.length > 0) {
+      setQuery(localQuery)
+      setMoviesNotFind(true)
     } else {
+      setMoviesNotFind(false)
       setQuery(localQuery)
       setFiltredMovieArray(JSON.parse(localMovie))
       setIsThumblerActive(localThumbler)
     }
-  }, [])
+  }, [localMovie, localQuery, localThumbler])
 
   return (
     <Switch>
@@ -165,7 +171,7 @@ function App() {
 
         </Header>
         <SearchForm onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} />
-        {isLoading ? <Preloader /> : <Movies moviesList={filtredMovieArray} />}
+        {isLoading ? <Preloader /> : <Movies moviesList={filtredMovieArray} moviesNotFind={moviesNotFind} />}
 
       </Route>
 

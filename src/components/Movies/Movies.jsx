@@ -5,7 +5,7 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import Footer from '../Footer/Footer';
 // import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
-const Movies = ({ moviesList }) => {
+const Movies = ({ moviesList, moviesNotFind }) => {
 
   // const userContent = React.useContext(CurrentUserContext);
 
@@ -17,16 +17,16 @@ const Movies = ({ moviesList }) => {
 
   return (
     <>
+      {moviesNotFind ? <span className="movies__not-found-text">Ничего не найдено</span> :
+        <MoviesCardList>
 
-      <MoviesCardList>
+          {moviesList.map((movie) => (
 
-        {moviesList.map((movie) => (
+            <MoviesCard key={movie.id} movie={movie} />
 
-          <MoviesCard key={movie.id} movie={movie} />
+          ))}
 
-        ))}
-
-      </MoviesCardList>
+        </MoviesCardList>}
 
       {/* <MoviesCardList>
         <span

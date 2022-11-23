@@ -1,7 +1,7 @@
 .movies__not-found-text {
-  display: none;
-}
-
-.movies__not-found-text_type_visible {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 50px 0;
 }
