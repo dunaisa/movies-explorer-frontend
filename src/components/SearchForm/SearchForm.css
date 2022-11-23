@@ -86,11 +86,11 @@
   display: none;
 }
 
-.thumbler__input:checked+.thumbler__label::after {
+.thumbler__input:checked+.thumbler__label::before {
   left: -45px;
 }
 
-.thumbler__input:checked~.thumbler__label::before {
+.thumbler__input:checked~.thumbler__label::after {
   background-color: #E8E8E8;
 }
 
@@ -107,7 +107,7 @@
   user-select: none;
 }
 
-.thumbler__label::before {
+.thumbler__label::after {
   content: '';
   background-color: #2BE080;
   width: 34px;
@@ -118,7 +118,7 @@
   top: 2px;
 }
 
-.thumbler__label::after {
+.thumbler__label::before {
   content: '';
   background-color: #FFFFFF;
   width: 10px;

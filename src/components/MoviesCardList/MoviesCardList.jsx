@@ -9,7 +9,7 @@ const MoviesCardList = ({ children }) => {
         {children}
       </ul>
 
-      <button className="movies__btn">Еще</button>
+      {/* <button className="movies__btn">Еще</button> */}
     </section>
   );
 }

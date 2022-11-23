@@ -14,12 +14,16 @@ import { moviesApi } from '../../utils/MoviesApi';
 import profileIcon from '../../images/profile-icon.svg';
 import SearchForm from '../SearchForm/SearchForm';
 import BurgerMenu from '../BurgerMenu/BurgerMenu';
+import Preloader from '../Preloader/Preloader';
 
 function App() {
 
 
   const [menuActive, setMenuActive] = useState(false);
   const [crossBtn, setCrossBtn] = useState(false);
+  const [isLoading, setIsloading] = useState(false);
+
+  const [query, setQuery] = useState('');
 
   const history = useHistory();
 
@@ -35,25 +39,43 @@ function App() {
     }
   }
 
-
   const [movies, setMovies] = useState([]);
+  // const [moviesNotFind, setMoviesNotFind] = useState(false);
 
   useEffect(() => {
+
+    // if (movies.length === 0 && query.length > 0) {
+    //   console.log(movies.length)
+    //   console.log(movies.length === 0 && query.length > 0)
+    //   setMoviesNotFind(true)
+    // }
+
     moviesApi.getMovies()
       .then((res) => {
+        setIsloading(true);
         setMovies(res);
+        // localStorage.setItem('movies', JSON.stringify(res));
       })
       .catch((err) => console.log(`${err}`))
-  }, [])
+      .finally(() => {
+        setIsloading(false)
+      })
 
-  const [query, setQuery] = useState('');
+
+  }, [])
 
   function handleInputChange(e) {
     setQuery(e.target.value)
   }
 
-  const [filtredMovieArray, seFiltredMovieArray] = useState([]);
+  const [filtredMovieArray, setFiltredMovieArray] = useState([]);
   const [isThumblerActive, setIsThumblerActive] = useState(false);
+
+  const toggleThumbler = () => {
+    // console.log(typeof isThumblerActive)
+    console.log(!isThumblerActive)
+    setIsThumblerActive(!isThumblerActive)
+  }
 
   // const searchKey = ["nameRU"]
 
@@ -65,18 +87,20 @@ function App() {
   const handleMovieSearch = () => {
     localStorage.setItem('query', `${query}`);
     localStorage.setItem('movie', JSON.stringify(filteredMovies));
-    localStorage.setItem('thumbler', false);
-    seFiltredMovieArray(filteredMovies)
+    localStorage.setItem('thumbler', JSON.stringify(isThumblerActive));
+
+    setFiltredMovieArray(filteredMovies)
   }
 
   useEffect(() => {
     const localMovie = localStorage.getItem('movie');
     const localQuery = localStorage.getItem('query');
-    const localThumbler = localStorage.getItem('thumbler');
-    console.log(localQuery)
-    if (localMovie) {
+    const localThumbler = Boolean(localStorage.getItem('thumbler'));
+    if (localMovie === null) {
+      setFiltredMovieArray([])
+    } else {
       setQuery(localQuery)
-      seFiltredMovieArray(JSON.parse(localMovie))
+      setFiltredMovieArray(JSON.parse(localMovie))
       setIsThumblerActive(localThumbler)
     }
   }, [])
@@ -140,8 +164,9 @@ function App() {
           </div>
 
         </Header>
-        <SearchForm onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} />
-        <Movies moviesList={filtredMovieArray} />
+        <SearchForm onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} />
+        {isLoading ? <Preloader /> : <Movies moviesList={filtredMovieArray} />}
+
       </Route>
 
       <Route exact path="/saved-movies">
@@ -151,6 +176,8 @@ function App() {
       <Route exact path="/profile">
         <Profile />
       </Route>
+
+
 
     </Switch>
   );

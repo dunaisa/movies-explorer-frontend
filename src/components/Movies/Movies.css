@@ -1,0 +1,7 @@
+.movies__not-found-text {
+  display: none;
+}
+
+.movies__not-found-text_type_visible {
+  display: block;
+}

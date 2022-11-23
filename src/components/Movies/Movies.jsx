@@ -22,13 +22,23 @@ const Movies = ({ moviesList }) => {
 
         {moviesList.map((movie) => (
 
-          < MoviesCard
-            key={movie.id}
-            movie={movie}
-          />
+          <MoviesCard key={movie.id} movie={movie} />
+
         ))}
 
       </MoviesCardList>
+
+      {/* <MoviesCardList>
+        <span
+          className={`movies__not-found-text ${moviesNotFind ? "movies__not-found-text_type_visible" : ""}`}>Ничего не найдено</span>
+
+        {moviesList.map((movie) => (
+
+          <MoviesCard key={movie.id} movie={movie} />
+
+        ))}
+
+      </MoviesCardList> */}
 
       <Footer />
     </>
