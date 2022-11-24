@@ -46,7 +46,8 @@ const SearchForm = ({ onSearch, onChange, query, isThumblerActive, toggleThumble
       </form>
 
       <div className="thumbler">
-        <input type="checkbox"
+        <input
+          type="checkbox"
           className="thumbler__input"
           name="thumbler"
           id="thumbler"

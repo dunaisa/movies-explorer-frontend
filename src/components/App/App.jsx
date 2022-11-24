@@ -87,26 +87,32 @@ function App() {
   const handleMovieSearch = () => {
     localStorage.setItem('query', `${query}`);
     localStorage.setItem('movies', JSON.stringify(filteredMovies));
-    localStorage.setItem('thumbler', JSON.stringify(isThumblerActive));
-
+    localStorage.setItem('thumbler', isThumblerActive);
+    console.log(localStorage.getItem('thumbler'))
     setFiltredMovieArray(filteredMovies)
   }
 
   const localMovie = localStorage.getItem('movies');
   const localQuery = localStorage.getItem('query');
-  const localThumbler = Boolean(localStorage.getItem('thumbler'));
+  const localThumbler = JSON.parse(localStorage.getItem('thumbler'));
 
   useEffect(() => {
 
     if (localMovie === null && localQuery === null) {
       setFiltredMovieArray([])
     } else if (JSON.parse(localMovie).length === 0 && localQuery.length > 0) {
+      setIsloading(true)
       setQuery(localQuery)
+      setIsloading(false)
+      setIsThumblerActive(localThumbler)
       setMoviesNotFind(true)
     } else {
       setMoviesNotFind(false)
+      setIsloading(true)
       setQuery(localQuery)
       setFiltredMovieArray(JSON.parse(localMovie))
+      setIsloading(false)
+      console.log(localThumbler)
       setIsThumblerActive(localThumbler)
     }
   }, [localMovie, localQuery, localThumbler])
