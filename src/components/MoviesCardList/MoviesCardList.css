@@ -37,6 +37,10 @@
   cursor: pointer;
 }
 
+.movies__btn_type_hidden {
+  display: none;
+}
+
 @media screen and (max-width: 896px) {
   .movies {
     padding-left: 30px;

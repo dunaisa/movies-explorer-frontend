@@ -9,36 +9,74 @@ const Movies = ({ moviesList, moviesNotFind }) => {
 
   // const userContent = React.useContext(CurrentUserContext);
 
-  // const [arr, setArr] = useState([]);
+  function debounce(fn, ms) {
+    let timer
+    return _ => {
+      clearTimeout(timer)
+      timer = setTimeout(_ => {
+        timer = null
+        fn.apply(this, arguments)
+      }, ms)
+    };
+  }
 
-  // useEffect(() => {
-  //   setArr(moviesList)
-  // }, [moviesList])
+  const [screenWidth, setDimensions] = useState(window.screen.availWidth)
+
+  const [defaultCard, setDefaultCard] = useState(0);
+  const movieCards = moviesList.slice(0, defaultCard);
+
+  const showDefaultMovieList = () => {
+    if (screenWidth > 768) {
+      return setDefaultCard(12)
+    }
+    if (screenWidth <= 768 && screenWidth > 480) {
+      return setDefaultCard(8)
+    }
+    if (screenWidth <= 480) {
+      return setDefaultCard(5)
+    }
+  }
+
+  useEffect(() => {
+    showDefaultMovieList()
+  }, [screenWidth])
+
+  useEffect(() => {
+    const debouncedHandleResize = debounce(function handleResize() {
+      setDimensions(window.screen.availWidth)
+    }, 1000)
+    window.addEventListener('resize', debouncedHandleResize)
+  }, [screenWidth])
+
+  const showMore = () => {
+    if (screenWidth > 768) {
+      return setDefaultCard(defaultCard + 3)
+    }
+    if (screenWidth <= 768) {
+      return setDefaultCard(defaultCard + 2)
+    }
+  }
+
+  const hideButton = () => {
+    if (movieCards.length === moviesList.length) {
+      return true
+    } else {
+      return false
+    }
+  }
 
   return (
     <>
       {moviesNotFind ? <span className="movies__not-found-text">Ничего не найдено</span> :
-        <MoviesCardList>
+        <MoviesCardList onClickBtn={showMore} isVisible={hideButton()}>
 
-          {moviesList.map((movie) => (
+          {movieCards.map((movie) => (
 
             <MoviesCard key={movie.id} movie={movie} />
 
           ))}
 
         </MoviesCardList>}
-
-      {/* <MoviesCardList>
-        <span
-          className={`movies__not-found-text ${moviesNotFind ? "movies__not-found-text_type_visible" : ""}`}>Ничего не найдено</span>
-
-        {moviesList.map((movie) => (
-
-          <MoviesCard key={movie.id} movie={movie} />
-
-        ))}
-
-      </MoviesCardList> */}
 
       <Footer />
     </>

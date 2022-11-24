@@ -72,8 +72,6 @@ function App() {
   const [isThumblerActive, setIsThumblerActive] = useState(false);
 
   const toggleThumbler = () => {
-    // console.log(typeof isThumblerActive)
-    console.log(!isThumblerActive)
     setIsThumblerActive(!isThumblerActive)
   }
 
@@ -88,7 +86,6 @@ function App() {
     localStorage.setItem('query', `${query}`);
     localStorage.setItem('movies', JSON.stringify(filteredMovies));
     localStorage.setItem('thumbler', isThumblerActive);
-    console.log(localStorage.getItem('thumbler'))
     setFiltredMovieArray(filteredMovies)
   }
 
@@ -112,7 +109,6 @@ function App() {
       setQuery(localQuery)
       setFiltredMovieArray(JSON.parse(localMovie))
       setIsloading(false)
-      console.log(localThumbler)
       setIsThumblerActive(localThumbler)
     }
   }, [localMovie, localQuery, localThumbler])
