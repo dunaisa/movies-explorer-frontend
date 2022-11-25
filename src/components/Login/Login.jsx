@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import Form from '../Form/Form';
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, isError, errorMessage }) => {
 
   const {
     register,
@@ -32,7 +32,9 @@ const Login = ({ onLogin }) => {
         onSubmit={handleSubmit(onSubmit)}
         emailLabel="Электронный адрес"
         passwordLabel="Пароль"
-        textBtn="Войти">
+        textBtn="Войти"
+        isError={isError}
+        errorMessage={errorMessage}>
 
       </Form>
       <div className="form-reroute">

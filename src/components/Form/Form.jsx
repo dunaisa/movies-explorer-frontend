@@ -2,7 +2,7 @@ import React from 'react';
 import './Form.css';
 import Logo from '../../images/logo.svg';
 
-const Form = ({ formHeading, onSubmit, nameLabel, emailLabel, passwordLabel, children, typeOfForm, errors, isValid, textBtn }) => {
+const Form = ({ formHeading, onSubmit, nameLabel, emailLabel, passwordLabel, children, typeOfForm, errors, isValid, textBtn, isError, errorMessage }) => {
 
   const formType = typeOfForm;
   const errorShow = errors;
@@ -63,6 +63,8 @@ const Form = ({ formHeading, onSubmit, nameLabel, emailLabel, passwordLabel, chi
           </div>
 
         </fieldset>
+
+        <span className={`form__error ${isError ? "form__error_type_visible" : ""}`}>{errorMessage}</span>
 
         <button
           type="submit"

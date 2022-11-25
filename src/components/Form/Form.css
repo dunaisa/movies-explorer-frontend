@@ -73,7 +73,7 @@
 
 .form-reroute {
   padding: 0;
-  margin: 16px 0 0;
+  margin: 16px 0 30px;
   text-align: center;
 }
 
@@ -143,6 +143,21 @@
 .form__input:focus~.form__field {
   color: #A0A0A0;
   left: 0;
+}
+
+.form__error {
+  display: none;
+}
+
+.form__error_type_visible {
+  display: block;
+  text-align: center;
+  width: 100%;
+  color: #FF3055;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16.94px;
 }
 
 @media screen and (max-width: 425px) {

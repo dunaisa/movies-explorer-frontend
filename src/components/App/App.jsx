@@ -32,6 +32,8 @@ function App() {
   const [query, setQuery] = useState('');
 
   const history = useHistory();
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   // const [loggedIn, setLoggedIn] = useState(false);
 
 
@@ -39,7 +41,6 @@ function App() {
   // const [isError, setIsError] = useState(false);
 
   const handleOnRegister = ({ name, email, password }) => {
-    console.log({ name, email, password })
     auth.register({ name, email, password })
       .then((res) => {
         console.log(res)
@@ -52,13 +53,22 @@ function App() {
         }
       })
       // .catch(() => { setIsError(true) })
-      .catch((err) => console.log(`${err}`))
+      .catch((err) => {
+        setErrorMessage((`${err}`))
+        setIsError(true)
+      })
   }
 
-  const handleOnLogin = ({ name, email, password }) => {
-    if ({ name, email, password }) {
-      history.push('/movies');
-    }
+  function handleOnLogin({ email, password }) {
+    auth.authorize({ email, password })
+      .then(() => {
+        history.push('/movies');
+
+      })
+      .catch((err) => {
+        setErrorMessage((`${err}`))
+        setIsError(true)
+      })
   }
 
   const [movies, setMovies] = useState([]);
@@ -164,11 +174,11 @@ function App() {
         </Route>
 
         <Route exact path="/signin">
-          <Login onLogin={handleOnLogin} />
+          <Login onLogin={handleOnLogin} isError={isError} errorMessage={errorMessage} />
         </Route>
 
         <Route exact path="/signup">
-          <Register onRegister={handleOnRegister} />
+          <Register onRegister={handleOnRegister} isError={isError} errorMessage={errorMessage} />
         </Route>
 
         <Route exact path="/movies">

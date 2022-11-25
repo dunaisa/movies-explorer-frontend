@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Form from '../Form/Form';
 
-const Register = ({ onRegister }) => {
+const Register = ({ onRegister, isError, errorMessage }) => {
 
   const {
     register,
@@ -18,7 +18,6 @@ const Register = ({ onRegister }) => {
   });
 
   const onSubmit = (values) => {
-    console.log(values)
     onRegister(values);
     reset();
   }
@@ -34,7 +33,9 @@ const Register = ({ onRegister }) => {
         nameLabel="Имя"
         emailLabel="Электронный адрес"
         passwordLabel="Пароль"
-        textBtn="Зарегистрироваться">
+        textBtn="Зарегистрироваться"
+        isError={isError}
+        errorMessage={errorMessage}>
 
         <div className="input-container">
 

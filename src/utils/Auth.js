@@ -5,11 +5,15 @@ const checkResponse = (res) => {
     return res.json();
   }
   // если ошибка, отклоняем промис
-  return Promise.reject(`Ошибка: ${res.status}`);
+  if (res.status === 409) {
+    return Promise.reject(`Ошибка ${res.status}: Такая почта уже существует. `);
+  }
+  if (res.status === 403) {
+    return Promise.reject(`Ошибка ${res.status}: Неправильная почта или пароль. `);
+  }
 }
 
 export const register = ({ name, email, password }) => {
-  console.log({ name, email, password })
   return fetch(`${BASE_URL}/signup`, {
     method: 'POST',
     headers: {
