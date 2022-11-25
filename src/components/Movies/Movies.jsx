@@ -5,7 +5,7 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import Footer from '../Footer/Footer';
 // import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
-const Movies = ({ moviesList, moviesNotFind }) => {
+const Movies = ({ moviesList, moviesNotFind, onMovieSave }) => {
 
   // const userContent = React.useContext(CurrentUserContext);
 
@@ -72,7 +72,7 @@ const Movies = ({ moviesList, moviesNotFind }) => {
 
           {movieCards.map((movie) => (
 
-            <MoviesCard key={movie.id} movie={movie} />
+            <MoviesCard key={movie.id} movie={movie} onMovieSave={onMovieSave} />
 
           ))}
 

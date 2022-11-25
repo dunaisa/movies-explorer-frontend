@@ -7,12 +7,9 @@ import SearchForm from '../SearchForm/SearchForm';
 import BurgerMenu from '../BurgerMenu/BurgerMenu';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import MoviesCard from '../MoviesCard/MoviesCard';
-import movieImage from '../../images/movie-image/movie-image.jpg';
-import yearsOfDesign from '../../images/movie-image/movie-image-100-years.jpg';
-import movieBasciya from '../../images/movie-image/basciyapic.jpg';
 import Footer from '../Footer/Footer';
 
-const SavedMovies = () => {
+const SavedMovies = ({ newMoviesList }) => {
 
   const [menuActive, setMenuActive] = React.useState(false);
   const [crossBtn, setCrossBtn] = React.useState(false);
@@ -64,32 +61,12 @@ const SavedMovies = () => {
       <SearchForm />
 
       <MoviesCardList>
-        <MoviesCard
-          imageSrc={movieImage}
-          movieTitle="33 слова о дизайне"
-          movieDuration="1ч 47м"
-          onMouseEnter={handleAddDeleteBtn}
-          onMouseLeave={handleRemoveDeleteBtn}>
-          {deleteBtnShown && (<button className="movie__delete-btn"></button>)}
-        </MoviesCard>
+        <MoviesCard>
+          {newMoviesList.map((movie) => (
 
-        <MoviesCard
-          imageSrc={yearsOfDesign}
-          movieTitle="Киноальманах «100 лет дизайна»"
-          movieDuration="1ч 47м"
-          onMouseEnter={handleAddDeleteBtn}
-          onMouseLeave={handleRemoveDeleteBtn}>
-          {deleteBtnShown && (<button className="movie__delete-btn"></button>)}
+            <MoviesCard key={movie.id} movie={movie} />
 
-        </MoviesCard>
-
-        <MoviesCard
-          imageSrc={movieBasciya}
-          movieTitle="Баския: Взрыв реальности"
-          movieDuration="1ч 47м"
-          onMouseEnter={handleAddDeleteBtn}
-          onMouseLeave={handleRemoveDeleteBtn}>
-          {deleteBtnShown && (<button className="movie__delete-btn"></button>)}
+          ))}
         </MoviesCard>
 
       </MoviesCardList>

@@ -18,6 +18,7 @@ const Register = ({ onRegister }) => {
   });
 
   const onSubmit = (values) => {
+    console.log(values)
     onRegister(values);
     reset();
   }
