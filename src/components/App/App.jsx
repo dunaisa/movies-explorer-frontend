@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch, Link, NavLink, useHistory } from 'react-router-dom';
+import { Route, Switch, Link, NavLink, useHistory, Redirect } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext.js';
 import Register from "../Register/Register";
 import Login from "../Login/Login";
@@ -14,17 +14,12 @@ import ProtectedRoute from '../ProtectedRoute';
 import { moviesApi } from '../../utils/MoviesApi';
 import { mainApi } from '../../utils/MainApi';
 import * as auth from '../../utils/Auth';
-import profileIcon from '../../images/profile-icon.svg';
-import SearchForm from '../SearchForm/SearchForm';
-import BurgerMenu from '../BurgerMenu/BurgerMenu';
-import Preloader from '../Preloader/Preloader';
 
 function App() {
 
   const [isCurrentUser, setCurrentUser] = useState({});
 
-  const [menuActive, setMenuActive] = useState(false);
-  const [crossBtn, setCrossBtn] = useState(false);
+
   const [isLoading, setIsloading] = useState(false);
 
   const [savedMoviesList, setSavedMoviesList] = useState([]);
@@ -34,11 +29,35 @@ function App() {
   const history = useHistory();
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  // const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const [isUserName, setIsUserName] = useState('');
 
 
   // const [isAuth, setIsAuth] = useState(false);
   // const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    function tokenCheck() {
+      // если у пользователя есть токен в localStorage, 
+      // эта функция проверит, действующий он или нет
+      const jwt = localStorage.getItem('token');
+      if (jwt) {
+        // здесь будем проверять токен
+        auth.getContent(jwt)
+          .then((res) => {
+            if (res) {
+              setLoggedIn(true);
+              //Установим в хедере почту юзера
+              setIsUserName(res.name)
+              history.push('/movies');
+            }
+          })
+          .catch((err) => console.log(`${err}`))
+      }
+    }
+    tokenCheck()
+  }, [history, loggedIn])
 
   const handleOnRegister = ({ name, email, password }) => {
     auth.register({ name, email, password })
@@ -46,7 +65,7 @@ function App() {
         console.log(res)
         if (res) {
           // setIsAuth(true);
-          // setLoggedIn(true);
+          setLoggedIn(true);
           history.push('/movies');
         } else {
           // setIsError(true);
@@ -62,6 +81,7 @@ function App() {
   function handleOnLogin({ email, password }) {
     auth.authorize({ email, password })
       .then(() => {
+        setLoggedIn(true);
         history.push('/movies');
 
       })
@@ -153,8 +173,11 @@ function App() {
     }
   }, [localMovie, localQuery, localThumbler])
 
+
+
   return (
     <CurrentUserContext.Provider value={isCurrentUser}>
+
       <Switch>
         <Route exact path="/">
           <Header headerClassName="header header_type_intro">
@@ -181,52 +204,20 @@ function App() {
           <Register onRegister={handleOnRegister} isError={isError} errorMessage={errorMessage} />
         </Route>
 
-        <Route exact path="/movies">
-          <Header headerClassName="header header-main header_type_movies">
-            <ul className="header-main__items">
-              <li className="header-main__item">
-                <NavLink className="header-main__link header-main__link_type_movies" activeClassName="header-main__link_type_active" to="/movies">Фильмы</NavLink>
-              </li>
-
-              <li className="header-main__item">
-                <NavLink className="header-main__link header-main__link_type_movies" activeClassName="header-main__link_type_active" to="/saved-movies">Сохранённые фильмы</NavLink>
-              </li>
-
-              <li className="header-main__item header-main__item_type_profile">
-                <NavLink className="header-main__link header-main__link_type_profile" to="/profile">Аккаунт</NavLink>
-                <img src={profileIcon} alt="" className="header-main__link_type_icon-profile" />
-              </li>
-
-            </ul>
-
-            <BurgerMenu active={menuActive} />
-
-            <div
-              className='header-main__burger-btn'
-              onClick={() => {
-                setMenuActive(!menuActive)
-                setCrossBtn(!crossBtn)
-              }}>
-              <span
-                className={` ${crossBtn ? 'header-main__burger-span_active' : 'header-main__burger-span'}`}
-              ></span>
-            </div>
-
-          </Header>
-          <SearchForm onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} />
-          {isLoading ? <Preloader /> : <Movies moviesList={filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} />}
-        </Route>
+        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} />
 
         <Route exact path="/saved-movies">
           <SavedMovies newMoviesList={savedMoviesList} />
         </Route>
 
         <Route exact path="/profile">
-          <Profile />
+          <Profile isUserName={isUserName} />
         </Route>
 
 
-
+        <Route exact path="*">
+          {loggedIn ? <Redirect to="/movies" /> : <Redirect to="/signup" />}
+        </Route>
       </Switch>
     </CurrentUserContext.Provider>
   );

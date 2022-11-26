@@ -54,7 +54,7 @@ const Register = ({ onRegister, isError, errorMessage }) => {
             id="name"
             type="text" />
           <div className="input-label"></div>
-          <label htmlFor="name" for="name" className="form__field">Имя</label>
+          <label htmlFor="name" className="form__field">Имя</label>
 
           <span className="form__text form__text_type_error">{errors.name && errors.name.message}</span>
 

@@ -2,7 +2,7 @@ import React from 'react';
 import './EditProfileForm.css';
 import { useForm } from 'react-hook-form';
 
-const EditProfileForm = ({ onEdit }) => {
+const EditProfileForm = ({ onEdit, isUserName }) => {
 
   const {
     register,
@@ -23,7 +23,7 @@ const EditProfileForm = ({ onEdit }) => {
 
   return (
     <div className="edit-form">
-      <span className="edit-form__heading">Hello</span>
+      <span className="edit-form__heading">{`Привет, ${isUserName}`}</span>
 
       <form className="edit-form__container" onSubmit={handleSubmit}>
         <fieldset className="edit-form__fieldset">

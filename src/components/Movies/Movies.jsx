@@ -3,9 +3,12 @@ import './Movies.css';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import Footer from '../Footer/Footer';
+import Header from '../Header/Header';
+import HeaderMain from '../HeaderMain/HeaderMain';
+import SearchForm from '../SearchForm/SearchForm';
 // import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
-const Movies = ({ moviesList, moviesNotFind, onMovieSave }) => {
+const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, query, isThumblerActive, toggleThumbler }) => {
 
   // const userContent = React.useContext(CurrentUserContext);
 
@@ -67,6 +70,12 @@ const Movies = ({ moviesList, moviesNotFind, onMovieSave }) => {
 
   return (
     <>
+      <Header headerClassName="header header-main header_type_movies">
+        <HeaderMain />
+      </Header>
+
+      <SearchForm onSearch={onSearch} onChange={onChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} />
+
       {moviesNotFind ? <span className="movies__not-found-text">Ничего не найдено</span> :
         <MoviesCardList onClickBtn={showMore} isVisible={hideButton()}>
 
