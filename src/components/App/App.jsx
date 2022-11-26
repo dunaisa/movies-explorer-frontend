@@ -9,7 +9,7 @@ import Movies from '../Movies/Movies';
 import Main from '../Main/Main';
 import Profile from '../Profile/Profile';
 import SavedMovies from '../SavedMovies/SavedMovies';
-import PageNotFound from '../PageNotFound/PageNotFound';
+// import PageNotFound from '../PageNotFound/PageNotFound';
 import ProtectedRoute from '../ProtectedRoute';
 import { moviesApi } from '../../utils/MoviesApi';
 import { mainApi } from '../../utils/MainApi';
@@ -32,6 +32,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   const [isUserName, setIsUserName] = useState('');
+  const [isUserEmail, setIsUserEmail] = useState('');
 
 
   // const [isAuth, setIsAuth] = useState(false);
@@ -48,8 +49,9 @@ function App() {
           .then((res) => {
             if (res) {
               setLoggedIn(true);
-              //Установим в хедере почту юзера
+              //Установим в профайле имя и почту юзера
               setIsUserName(res.name)
+              setIsUserEmail(res.email)
               history.push('/movies');
             }
           })
@@ -91,22 +93,27 @@ function App() {
       })
   }
 
+  const handleEditProfile = (data) => {
+    mainApi.setInfo(data)
+      .then((res) => {
+        setIsUserName(res.name);
+        setIsUserEmail(res.email);
+      })
+      .catch((err) => {
+        setErrorMessage((`${err}`))
+        setIsError(true)
+      })
+  }
+
   const [movies, setMovies] = useState([]);
   const [moviesNotFind, setMoviesNotFind] = useState(false);
 
   useEffect(() => {
 
-    // if (movies.length === 0 && query.length > 0) {
-    //   console.log(movies.length)
-    //   console.log(movies.length === 0 && query.length > 0)
-    //   setMoviesNotFind(true)
-    // }
-
     moviesApi.getMovies()
       .then((res) => {
         setIsloading(true);
         setMovies(res);
-        // localStorage.setItem('movies', JSON.stringify(res));
       })
       .catch((err) => console.log(`${err}`))
       .finally(() => {
@@ -115,6 +122,17 @@ function App() {
 
 
   }, [])
+
+  // useEffect(() => {
+  //   if (loggedIn === true) {
+  //     mainApi.getInfo()
+  //       .then((res) => {
+  //         setCurrentUser(res);
+  //       })
+  //       .catch((err) => console.log(`${err}`))
+  //   }
+
+  // }, [loggedIn])
 
   function handleInputChange(e) {
     setQuery(e.target.value)
@@ -173,7 +191,11 @@ function App() {
     }
   }, [localMovie, localQuery, localThumbler])
 
-
+  const signOut = () => {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+    history.push('/');
+  }
 
   return (
     <CurrentUserContext.Provider value={isCurrentUser}>
@@ -193,7 +215,6 @@ function App() {
           </Header>
           <Main />
           <Footer />
-          <PageNotFound />
         </Route>
 
         <Route exact path="/signin">
@@ -210,10 +231,7 @@ function App() {
           <SavedMovies newMoviesList={savedMoviesList} />
         </Route>
 
-        <Route exact path="/profile">
-          <Profile isUserName={isUserName} />
-        </Route>
-
+        <ProtectedRoute exact path="/profile" component={Profile} loggedIn={loggedIn} isUserName={isUserName} isUserEmail={isUserEmail} onEdit={handleEditProfile} signOut={signOut} isError={isError} errorMessage={errorMessage} />
 
         <Route exact path="*">
           {loggedIn ? <Redirect to="/movies" /> : <Redirect to="/signup" />}

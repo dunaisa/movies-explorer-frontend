@@ -70,21 +70,21 @@ class MainApi {
 
   // Загрузка информации о пользователе на сервер
 
-  // setInfo(data) {
-  //   const userInfoBody = {
-  //     name: data.name,
-  //     about: data.about,
-  //   }
-  //   return fetch(`${this._url}/users/me`, {
-  //     method: 'PATCH',
-  //     headers: {
-  //       authorization: `Bearer ${localStorage.getItem('token')}`,
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(userInfoBody)
-  //   })
-  //     .then(this._checkResponse);
-  // }
+  setInfo(data) {
+    const userInfoBody = {
+      name: data.name,
+      email: data.email,
+    }
+    return fetch(`${this._url}/users/me`, {
+      method: 'PATCH',
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(userInfoBody)
+    })
+      .then(this._checkResponse);
+  }
 
   // setAvatar(data) {
   //   const userAvatarBody = {

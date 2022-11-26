@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './EditProfileForm.css';
 import { useForm } from 'react-hook-form';
 
-const EditProfileForm = ({ onEdit, isUserName }) => {
+const EditProfileForm = ({ onEdit, isUserName, isUserEmail, signOut, isError, errorMessage }) => {
+
+  // const [name, setName] = useState(isUserName);
 
   const {
     register,
@@ -16,17 +18,18 @@ const EditProfileForm = ({ onEdit, isUserName }) => {
     mode: "onChange"
   });
 
-  // const onSubmit = (values) => {
-  //   onEdit(values);
-  //   reset();
-  // }
+  const onSubmit = (values) => {
+    onEdit(values);
+    reset();
+  }
 
   return (
     <div className="edit-form">
-      <span className="edit-form__heading">{`Привет, ${isUserName}`}</span>
+      <span className="edit-form__heading">{`Привет, ${isUserName}!`}</span>
 
-      <form className="edit-form__container" onSubmit={handleSubmit}>
+      <form className="edit-form__container" onSubmit={handleSubmit(onSubmit)}>
         <fieldset className="edit-form__fieldset">
+
           <div className="edit-form__field">
             <label htmlFor="email" className="edit-form__label">Имя</label>
 
@@ -40,7 +43,7 @@ const EditProfileForm = ({ onEdit, isUserName }) => {
 
               })}
               className="edit-form__input"
-              placeholder=" "
+              placeholder={isUserName}
               id="name-edit"
               type="text" />
 
@@ -61,7 +64,7 @@ const EditProfileForm = ({ onEdit, isUserName }) => {
 
               })}
               className="edit-form__input"
-              placeholder=" "
+              placeholder={isUserEmail}
               id="email"
               type="email" />
 
@@ -71,6 +74,8 @@ const EditProfileForm = ({ onEdit, isUserName }) => {
           </div>
 
         </fieldset>
+        <span className={`edit-form__error ${isError ? "form__error_type_visible" : ""}`}>{errorMessage}</span>
+
         <button
           type="submit"
           className={`edit-form__btn ${!isValid ? "edit-form__btn_disabled" : ''}`}
@@ -78,7 +83,9 @@ const EditProfileForm = ({ onEdit, isUserName }) => {
       </form>
 
 
-      <button className="edit-form__signout">Выйти из аккаунта</button>
+
+
+      <button className="edit-form__signout" onClick={signOut}>Выйти из аккаунта</button>
 
 
     </div>

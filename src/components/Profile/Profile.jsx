@@ -7,7 +7,7 @@ import profileIcon from '../../images/profile-icon.svg';
 import EditProfileForm from '../EditProfileForm/EditProfileForm';
 
 
-const Profile = ({ isUserName }) => {
+const Profile = ({ isUserName, isUserEmail, onEdit, signOut, isError, errorMessage }) => {
 
   const [menuActive, setMenuActive] = React.useState(false);
   const [crossBtn, setCrossBtn] = React.useState(false);
@@ -46,7 +46,7 @@ const Profile = ({ isUserName }) => {
 
       </Header>
 
-      <EditProfileForm isUserName={isUserName} />
+      <EditProfileForm isUserName={isUserName} isUserEmail={isUserEmail} onEdit={onEdit} signOut={signOut} isError={isError} errorMessage={errorMessage} />
 
     </>
   );

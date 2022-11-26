@@ -62,7 +62,7 @@
   margin: 0;
   position: absolute;
   top: calc(100% + 3px);
-  left: 0;
+  right: 0;
 }
 
 .edit-form__input {
@@ -103,6 +103,8 @@
   font-weight: 500;
   line-height: 15.73px;
 }
+
+.edit-form__error {}
 
 @media screen and (max-width: 768px) {
   .edit-form__container {
