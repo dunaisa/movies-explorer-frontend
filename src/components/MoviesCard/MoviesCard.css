@@ -68,7 +68,7 @@
 
 .movie__like-btn_active {
   background-image: url(../../images/like-active.svg);
-  transition: 0s;
+  transition: 0.8s;
 }
 
 .movie__duration {
@@ -82,6 +82,13 @@
 }
 
 .movie__delete-btn {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.movie:hover .movie__delete-btn_type_active {
   align-self: center;
   background: transparent;
   background-image: url(../../images/delete-card-btn.svg);

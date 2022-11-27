@@ -1,9 +1,11 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import './MoviesCardList.css';
 
 
 const MoviesCardList = ({ children, onClickBtn, isVisible }) => {
 
+  const location = useLocation();
 
   return (
     <section className="movies">
@@ -11,7 +13,9 @@ const MoviesCardList = ({ children, onClickBtn, isVisible }) => {
         {children}
       </ul>
 
-      <button className={`movies__btn ${isVisible ? 'movies__btn_type_hidden' : ''}`} onClick={onClickBtn}>Еще</button>
+      {location.pathname === "/movies" ? <button className={`movies__btn ${isVisible ? 'movies__btn_type_hidden' : ''}`} onClick={onClickBtn}>Еще</button> : ''}
+
+
     </section>
   );
 }

@@ -21,6 +21,7 @@
   margin: 123px 0 0;
   padding: 0;
   width: 410px;
+  position: relative;
 }
 
 .edit-form__fieldset {
@@ -87,6 +88,7 @@
   font-size: 13px;
   font-weight: 500;
   line-height: 15.73px;
+  cursor: pointer;
 }
 
 .edit-form__btn_disabled {
@@ -95,6 +97,7 @@
 
 .edit-form__signout {
   margin: 16px 0 0;
+  padding: 0;
   border: none;
   background: transparent;
   color: #FF3055;
@@ -102,9 +105,26 @@
   font-size: 13px;
   font-weight: 500;
   line-height: 15.73px;
+  cursor: pointer;
 }
 
-.edit-form__error {}
+.edit-form__error {
+  display: none;
+}
+
+.edit-form__error_type_visible {
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: #FF3055;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 15.73px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+}
 
 @media screen and (max-width: 768px) {
   .edit-form__container {

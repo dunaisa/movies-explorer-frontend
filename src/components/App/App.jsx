@@ -73,10 +73,14 @@ function App() {
           // setIsError(true);
         }
       })
-      // .catch(() => { setIsError(true) })
       .catch((err) => {
         setErrorMessage((`${err}`))
         setIsError(true)
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setIsError(false)
+        }, 3000);
       })
   }
 
@@ -91,17 +95,28 @@ function App() {
         setErrorMessage((`${err}`))
         setIsError(true)
       })
+      .finally(() => {
+        setTimeout(() => {
+          setIsError(false)
+        }, 3000);
+      })
   }
 
   const handleEditProfile = (data) => {
     mainApi.setInfo(data)
       .then((res) => {
+        setCurrentUser(res)
         setIsUserName(res.name);
         setIsUserEmail(res.email);
       })
       .catch((err) => {
         setErrorMessage((`${err}`))
         setIsError(true)
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setIsError(false)
+        }, 3000);
       })
   }
 
@@ -164,12 +179,28 @@ function App() {
   const localThumbler = JSON.parse(localStorage.getItem('thumbler'));
 
   const onMovieSave = (data) => {
-    mainApi.setInitialCards(data)
+    mainApi.setUserMovies(data)
       .then((res) => {
         console.log(res)
-        setSavedMoviesList([...res])
+        setSavedMoviesList([res, ...savedMoviesList])
       })
   }
+
+  const onMovieDelete = (id) => {
+    mainApi.deleteMovie(id)
+      .then(() => {
+        setSavedMoviesList(savedMoviesList.filter((movie) => (movie.id === id)))
+
+      })
+      .catch((err) => console.log(`${err}`))
+  }
+
+  useEffect(() => {
+    mainApi.getUserMovies()
+      .then((res) => {
+        setSavedMoviesList(res)
+      })
+  }, [])
 
   useEffect(() => {
 
@@ -228,7 +259,7 @@ function App() {
         <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} />
 
         <Route exact path="/saved-movies">
-          <SavedMovies newMoviesList={savedMoviesList} />
+          <SavedMovies newMoviesList={savedMoviesList} onMovieDelete={onMovieDelete} />
         </Route>
 
         <ProtectedRoute exact path="/profile" component={Profile} loggedIn={loggedIn} isUserName={isUserName} isUserEmail={isUserEmail} onEdit={handleEditProfile} signOut={signOut} isError={isError} errorMessage={errorMessage} />

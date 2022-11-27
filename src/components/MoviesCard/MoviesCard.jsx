@@ -1,22 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import './MoviesCard.css';
 
 
-const MoviesCard = ({ movie, onMouseEnter, onMouseLeave, onMovieSave }) => {
+const MoviesCard = ({ movie, onMouseEnter, onMouseLeave, onMovieSave, onMovieDelete }) => {
+
+  const location = useLocation();
+
+  const [isLikeActive, setIsLikeActive] = useState(false);
+
+  const likeBtn = `movie__like-btn ${!isLikeActive ? "" : "movie__like-btn_active"}`
+  const deleteBtn = 'movie__delete-btn movie__delete-btn_type_active';
 
   const hadleMovieSave = () => {
+    setIsLikeActive(true)
     onMovieSave(movie)
+  }
+
+  const hadleMovieDelete = () => {
+    onMovieDelete(movie.movieId)
   }
 
   return (
     <li className="movie" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} >
       <a href={movie.trailerLink} className="movie__link" target="_blank" rel="noreferrer">
-        <img src={`https://api.nomoreparties.co/${movie.image.url}`} alt={movie.nameRU} className="movie__image" />
+        <img src={location.pathname === "/movies" ? `https://api.nomoreparties.co${movie.image.url}` : movie.image} alt={movie.nameRU} className="movie__image" />
       </a>
       <div className="movie__info">
         <div className="movie__content">
           <h5 className="movie__heading">{movie.nameRU}</h5>
-          <button className="movie__like-btn" type="button" onClick={hadleMovieSave}></button>
+
+          {location.pathname === "/movies" ? <button className={likeBtn} type="button" onClick={hadleMovieSave}></button> : <button className={deleteBtn} type="button" onClick={hadleMovieDelete}></button>}
         </div>
         <span className="movie__duration">{movie.duration} мин</span>
       </div>

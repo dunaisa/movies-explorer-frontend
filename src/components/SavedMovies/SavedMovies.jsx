@@ -7,7 +7,7 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import Footer from '../Footer/Footer';
 import HeaderMain from '../HeaderMain/HeaderMain';
 
-const SavedMovies = ({ newMoviesList }) => {
+const SavedMovies = ({ newMoviesList, onMovieDelete }) => {
 
   const [menuActive, setMenuActive] = React.useState(false);
   const [crossBtn, setCrossBtn] = React.useState(false);
@@ -31,13 +31,11 @@ const SavedMovies = ({ newMoviesList }) => {
       <SearchForm />
 
       <MoviesCardList>
-        <MoviesCard>
-          {newMoviesList.map((movie) => (
+        {newMoviesList.map((movieSave) => (
 
-            <MoviesCard key={movie.id} movie={movie} />
+          <MoviesCard key={movieSave.id} movie={movieSave} onMovieDelete={onMovieDelete} />
 
-          ))}
-        </MoviesCard>
+        ))}
 
       </MoviesCardList>
 

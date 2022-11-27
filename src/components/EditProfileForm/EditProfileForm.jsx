@@ -74,7 +74,7 @@ const EditProfileForm = ({ onEdit, isUserName, isUserEmail, signOut, isError, er
           </div>
 
         </fieldset>
-        <span className={`edit-form__error ${isError ? "form__error_type_visible" : ""}`}>{errorMessage}</span>
+        <span className={`edit-form__error ${isError ? "edit-form__error_type_visible" : ""}`}>{errorMessage}</span>
 
         <button
           type="submit"
