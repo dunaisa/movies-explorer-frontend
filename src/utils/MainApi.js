@@ -41,7 +41,7 @@ class MainApi {
       duration: data.duration,
       year: data.year,
       description: data.description,
-      image: (data.image).toString().slice(28),
+      image: `https://api.nomoreparties.co${data.image.url}`,
       trailerLink: data.trailerLink,
       nameRU: data.nameRU,
       nameEN: data.nameEN,
@@ -103,8 +103,8 @@ class MainApi {
   //     .then(this._checkResponse);
   // }
 
-  deleteMovie(movieId) {
-    return fetch(`${this._url}/movies/${movieId}`, {
+  deleteMovie(_id) {
+    return fetch(`${this._url}/movies/${_id}`, {
       method: 'DELETE',
       headers: {
         authorization: `Bearer ${localStorage.getItem('token')}`,

@@ -81,7 +81,7 @@ const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, qu
 
           {movieCards.map((movie) => (
 
-            <MoviesCard key={movie.id} movie={movie} onMovieSave={onMovieSave} />
+            <MoviesCard key={movie._id} movie={movie} onMovieSave={onMovieSave} />
 
           ))}
 

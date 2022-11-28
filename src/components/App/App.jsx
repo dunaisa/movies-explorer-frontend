@@ -179,6 +179,7 @@ function App() {
   const localThumbler = JSON.parse(localStorage.getItem('thumbler'));
 
   const onMovieSave = (data) => {
+    console.log(data)
     mainApi.setUserMovies(data)
       .then((res) => {
         console.log(res)
@@ -186,10 +187,10 @@ function App() {
       })
   }
 
-  const onMovieDelete = (id) => {
-    mainApi.deleteMovie(id)
+  const onMovieDelete = (_id) => {
+    mainApi.deleteMovie(_id)
       .then(() => {
-        setSavedMoviesList(savedMoviesList.filter((movie) => (movie.id === id)))
+        setSavedMoviesList(savedMoviesList.filter((movie) => movie._id !== _id))
 
       })
       .catch((err) => console.log(`${err}`))

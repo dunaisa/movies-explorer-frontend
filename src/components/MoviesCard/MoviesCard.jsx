@@ -10,22 +10,25 @@ const MoviesCard = ({ movie, onMouseEnter, onMouseLeave, onMovieSave, onMovieDel
 
   const [isLikeActive, setIsLikeActive] = useState(false);
 
+  const movieImageLink = `https://api.nomoreparties.co/${movie.image.url}`;
+
   const likeBtn = `movie__like-btn ${!isLikeActive ? "" : "movie__like-btn_active"}`
   const deleteBtn = 'movie__delete-btn movie__delete-btn_type_active';
 
   const hadleMovieSave = () => {
     setIsLikeActive(true)
+    console.log(movie)
     onMovieSave(movie)
   }
 
   const hadleMovieDelete = () => {
-    onMovieDelete(movie.movieId)
+    onMovieDelete(movie._id)
   }
 
   return (
     <li className="movie" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} >
       <a href={movie.trailerLink} className="movie__link" target="_blank" rel="noreferrer">
-        <img src={location.pathname === "/movies" ? `https://api.nomoreparties.co${movie.image.url}` : movie.image} alt={movie.nameRU} className="movie__image" />
+        <img src={location.pathname === "/movies" ? movieImageLink : movie.image} alt={movie.nameRU} className="movie__image" />
       </a>
       <div className="movie__info">
         <div className="movie__content">

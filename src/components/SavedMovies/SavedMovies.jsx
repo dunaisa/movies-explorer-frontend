@@ -14,14 +14,6 @@ const SavedMovies = ({ newMoviesList, onMovieDelete }) => {
 
   const [deleteBtnShown, setDeleteBtnShown] = React.useState(false);
 
-  const handleAddDeleteBtn = () => {
-    setDeleteBtnShown(true)
-  }
-
-  const handleRemoveDeleteBtn = () => {
-    setDeleteBtnShown(false)
-  }
-
   return (
     <>
       <Header headerClassName="header header-main header_type_movies">
@@ -33,7 +25,7 @@ const SavedMovies = ({ newMoviesList, onMovieDelete }) => {
       <MoviesCardList>
         {newMoviesList.map((movieSave) => (
 
-          <MoviesCard key={movieSave.id} movie={movieSave} onMovieDelete={onMovieDelete} />
+          <MoviesCard key={movieSave._id} movie={movieSave} onMovieDelete={onMovieDelete} />
 
         ))}
 
