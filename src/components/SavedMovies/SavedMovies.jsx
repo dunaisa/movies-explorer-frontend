@@ -9,11 +9,6 @@ import HeaderMain from '../HeaderMain/HeaderMain';
 
 const SavedMovies = ({ newMoviesList, onMovieDelete }) => {
 
-  const [menuActive, setMenuActive] = React.useState(false);
-  const [crossBtn, setCrossBtn] = React.useState(false);
-
-  const [deleteBtnShown, setDeleteBtnShown] = React.useState(false);
-
   return (
     <>
       <Header headerClassName="header header-main header_type_movies">

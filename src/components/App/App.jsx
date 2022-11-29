@@ -19,7 +19,6 @@ function App() {
 
   const [isCurrentUser, setCurrentUser] = useState({});
 
-
   const [isLoading, setIsloading] = useState(false);
 
   const [savedMoviesList, setSavedMoviesList] = useState([]);
@@ -34,6 +33,7 @@ function App() {
   const [isUserName, setIsUserName] = useState('');
   const [isUserEmail, setIsUserEmail] = useState('');
 
+  const [savedMoviesIds, setSavedMoviesIds] = useState([]);
 
   // const [isAuth, setIsAuth] = useState(false);
   // const [isError, setIsError] = useState(false);
@@ -178,19 +178,28 @@ function App() {
   const localQuery = localStorage.getItem('query');
   const localThumbler = JSON.parse(localStorage.getItem('thumbler'));
 
+  // dictionary
+
+  const [dic, setDic] = useState({});
+
   const onMovieSave = (data) => {
-    console.log(data)
     mainApi.setUserMovies(data)
       .then((res) => {
-        console.log(res)
         setSavedMoviesList([res, ...savedMoviesList])
       })
   }
 
+  useEffect(() => {
+    setSavedMoviesIds(savedMoviesList.map((film) => film.movieId))
+    console.log(savedMoviesList.map((film) => film.movieId))
+  }, [savedMoviesList])
+
   const onMovieDelete = (_id) => {
     mainApi.deleteMovie(_id)
       .then(() => {
-        setSavedMoviesList(savedMoviesList.filter((movie) => movie._id !== _id))
+        setSavedMoviesList(savedMoviesList.filter((movie) => {
+          return movie._id !== _id
+        }))
 
       })
       .catch((err) => console.log(`${err}`))
@@ -199,7 +208,9 @@ function App() {
   useEffect(() => {
     mainApi.getUserMovies()
       .then((res) => {
-        setSavedMoviesList(res)
+        if (res) {
+          setSavedMoviesList(res)
+        }
       })
   }, [])
 
@@ -222,6 +233,8 @@ function App() {
       setIsThumblerActive(localThumbler)
     }
   }, [localMovie, localQuery, localThumbler])
+
+
 
   const signOut = () => {
     localStorage.removeItem('token');
@@ -257,7 +270,7 @@ function App() {
           <Register onRegister={handleOnRegister} isError={isError} errorMessage={errorMessage} />
         </Route>
 
-        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} />
+        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} onMovieDelete={onMovieDelete} savedMoviesIds={savedMoviesIds} />
 
         <Route exact path="/saved-movies">
           <SavedMovies newMoviesList={savedMoviesList} onMovieDelete={onMovieDelete} />

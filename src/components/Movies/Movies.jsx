@@ -8,7 +8,7 @@ import HeaderMain from '../HeaderMain/HeaderMain';
 import SearchForm from '../SearchForm/SearchForm';
 // import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
-const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, query, isThumblerActive, toggleThumbler }) => {
+const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, query, isThumblerActive, toggleThumbler, savedMoviesIds, onMovieDelete }) => {
 
   // const userContent = React.useContext(CurrentUserContext);
 
@@ -81,7 +81,7 @@ const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, qu
 
           {movieCards.map((movie) => (
 
-            <MoviesCard key={movie._id} movie={movie} onMovieSave={onMovieSave} />
+            <MoviesCard key={movie.movieId} movie={movie} onMovieSave={onMovieSave} onMovieDelete={onMovieDelete} isLiked={savedMoviesIds.includes(movie.id)} />
 
           ))}
 

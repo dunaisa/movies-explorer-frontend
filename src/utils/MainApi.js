@@ -46,9 +46,9 @@ class MainApi {
       nameRU: data.nameRU,
       nameEN: data.nameEN,
       thumbnail: `https://api.nomoreparties.co${data.image.url}`,
-      movieId: data.id
+      movieId: data.id,
+      id: data._id
     }
-    console.log(movieBody)
     return fetch(`${this._url}/movies`, {
       method: 'POST',
       headers: {
@@ -91,17 +91,6 @@ class MainApi {
     })
       .then(this._checkResponse);
   }
-
-  // toggleLike(cardId, isLiked) {
-  //   return fetch(`${this._url}/cards/${cardId}/likes`, {
-  //     method: isLiked ? 'DELETE' : 'PUT',
-  //     headers: {
-  //       authorization: `Bearer ${localStorage.getItem('token')}`,
-  //       'Content-Type': 'application/json'
-  //     },
-  //   })
-  //     .then(this._checkResponse);
-  // }
 
   deleteMovie(_id) {
     return fetch(`${this._url}/movies/${_id}`, {
