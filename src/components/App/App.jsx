@@ -116,16 +116,10 @@ function App() {
   const handleEditProfile = (data) => {
     mainApi.setInfo(data)
       .then((res) => {
-        if (isCurrentUser.name === res.name && isCurrentUser.email === res.email) {
-          console.log(isCurrentUser.name)
-          console.log(res.name)
-          setErrorMessage('Имя и почта должны отличаться от предыдущих значений хотя бы на один символ.')
-          setIsError(true)
-        } else {
-          setCurrentUser(res)
-          setErrorMessage('Успешно!')
-          setIsError(true)
-        }
+        setCurrentUser(res)
+        setErrorMessage('Смена данных успешно произведена!')
+        setIsError(true)
+
       })
       .catch((err) => {
         setErrorMessage((`${err}`))

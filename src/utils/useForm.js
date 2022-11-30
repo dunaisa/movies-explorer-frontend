@@ -1,18 +1,22 @@
-import React, { useCallback } from "./react";
+import React, { useCallback } from "react";
 
 //хук управления формой
-export function useForm() {
-  const [values, setValues] = React.useState({});
+// export function useForm() {
+//   const [values, setValues] = React.useState({});
+//   const [errors, setErrors] = React.useState({});
+//   const [isValid, setIsValid] = React.useState(false);
 
-  const handleChange = (event) => {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-    setValues({ ...values, [name]: value });
-  };
+//   const handleChange = (event) => {
+//     const target = event.target;
+//     const name = target.name;
+//     const value = target.value;
+//     setValues({ ...values, [name]: value });
+//     setErrors({ ...errors, [name]: target.validationMessage });
+//     setIsValid(target.closest("form").checkValidity());
+//   };
 
-  return { values, handleChange, setValues };
-}
+//   return [values, handleChange, errors, isValid];
+// }
 
 //хук управления формой и валидации формы
 export function useFormWithValidation() {
@@ -21,12 +25,12 @@ export function useFormWithValidation() {
   const [isValid, setIsValid] = React.useState(false);
 
   const handleChange = (event) => {
-    const target = event.target;
-    const name = target.name;
-    const value = target.value;
-    setValues({ ...values, [name]: value });
-    setErrors({ ...errors, [name]: target.validationMessage });
-    setIsValid(target.closest("form").checkValidity());
+    // const target = event.target;
+    // const name = target.name;
+    // const value = target.value;
+    setValues({ ...values, [event.target.name]: event.target.value });
+    setErrors({ ...errors, [event.target.name]: event.target.validationMessage });
+    setIsValid(event.target.closest("form").checkValidity());
   };
 
   const resetForm = useCallback(
@@ -39,4 +43,4 @@ export function useFormWithValidation() {
   );
 
   return { values, handleChange, errors, isValid, resetForm };
-}
+};
