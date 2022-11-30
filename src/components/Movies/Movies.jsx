@@ -8,7 +8,7 @@ import HeaderMain from '../HeaderMain/HeaderMain';
 import SearchForm from '../SearchForm/SearchForm';
 // import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
-const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, query, isThumblerActive, toggleThumbler, savedMoviesIds, deleteMovie }) => {
+const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, query, isThumblerActive, toggleThumbler, savedMoviesIds, deleteMovie, handleShortMovies }) => {
 
   // const userContent = React.useContext(CurrentUserContext);
 
@@ -74,7 +74,7 @@ const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, qu
         <HeaderMain />
       </Header>
 
-      <SearchForm onSearch={onSearch} onChange={onChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} />
+      <SearchForm onSearch={onSearch} onChange={onChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} handleShortMovies={handleShortMovies} />
 
       {moviesNotFind ? <span className="movies__not-found-text">Ничего не найдено</span> :
         <MoviesCardList onClickBtn={showMore} isVisible={hideButton()}>

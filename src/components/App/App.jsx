@@ -30,9 +30,6 @@ function App() {
   const [errorMessage, setErrorMessage] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
 
-  // const [isUserName, setIsUserName] = useState('');
-  // const [isUserEmail, setIsUserEmail] = useState('');
-
   const [savedMoviesIds, setSavedMoviesIds] = useState([]);
 
   // const [isAuth, setIsAuth] = useState(false);
@@ -156,6 +153,8 @@ function App() {
 
   const [filtredMovieArray, setFiltredMovieArray] = useState([]);
   const [isThumblerActive, setIsThumblerActive] = useState(false);
+  const [filterShortFilm, setFilterShortFilm] = useState([]);
+  const [filterShortSavedFilm, setFilterShortSavedFilm] = useState([]);
 
   const toggleThumbler = () => {
     setIsThumblerActive(!isThumblerActive)
@@ -164,9 +163,17 @@ function App() {
   // const searchKey = ["nameRU"]
 
   const filteredMovies = movies.filter((items) =>
-    // searchKey.some((key) => items[key].toLowerCase().includes(query.toLowerCase()))
     items.nameRU.toLowerCase().includes(query.toLowerCase())
   )
+
+  const filteredSavedMovies = savedMoviesList.filter((items) =>
+    items.nameRU.toLowerCase().includes(query.toLowerCase())
+  )
+
+  const findShortMovies = filteredMovies.filter((item) => item.duration < 40);
+
+
+  const findShortSavedMovies = savedMoviesList.filter((item) => item.duration < 40);
 
   const handleMovieSearch = () => {
     localStorage.setItem('query', `${query}`);
@@ -175,13 +182,25 @@ function App() {
     setFiltredMovieArray(filteredMovies)
   }
 
+  const handleSavedMovieSearch = () => {
+    setSavedMoviesList(filteredSavedMovies)
+  }
+
+  const handleShortMovies = () => {
+    setFilterShortFilm(findShortMovies)
+  }
+
+  const handleShortSavedMovies = () => {
+    setFilterShortSavedFilm(findShortSavedMovies)
+  }
+
   const localMovie = localStorage.getItem('movies');
   const localQuery = localStorage.getItem('query');
   const localThumbler = JSON.parse(localStorage.getItem('thumbler'));
 
   // dictionary
 
-  const [dic, setDic] = useState({});
+  // const [dic, setDic] = useState({});
 
   const onMovieSave = (data) => {
     mainApi.setUserMovies(data)
@@ -276,11 +295,9 @@ function App() {
           <Register onRegister={handleOnRegister} isError={isError} errorMessage={errorMessage} />
         </Route>
 
-        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} />
+        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={isThumblerActive ? filterShortFilm : filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} handleShortMovies={handleShortMovies} />
 
-        <Route exact path="/saved-movies">
-          <SavedMovies newMoviesList={savedMoviesList} onMovieDelete={onMovieDelete} />
-        </Route>
+        <ProtectedRoute exact path="/saved-movies" component={SavedMovies} loggedIn={loggedIn} newMoviesList={isThumblerActive ? filterShortSavedFilm : savedMoviesList} onMovieDelete={onMovieDelete} onSearch={handleSavedMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesNotFind={moviesNotFind} handleShortMovies={handleShortSavedMovies} />
 
         <ProtectedRoute exact path="/profile" component={Profile} loggedIn={loggedIn} onEdit={handleEditProfile} signOut={signOut} isError={isError} errorMessage={errorMessage} />
 

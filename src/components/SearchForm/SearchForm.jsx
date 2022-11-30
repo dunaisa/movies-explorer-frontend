@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import './SearchForm.css';
 import btnIcon from '../../images/search-form-icon.svg';
 
-const SearchForm = ({ onSearch, onChange, query, isThumblerActive, toggleThumbler }) => {
+const SearchForm = ({ onSearch, onChange, query, isThumblerActive, toggleThumbler, handleShortMovies }) => {
 
   const {
     register,
@@ -52,7 +52,8 @@ const SearchForm = ({ onSearch, onChange, query, isThumblerActive, toggleThumble
           name="thumbler"
           id="thumbler"
           checked={isThumblerActive}
-          onChange={toggleThumbler} />
+          onChange={toggleThumbler}
+          onClick={handleShortMovies} />
         <label htmlFor="thumbler" className="thumbler__label">Короткометражки</label>
       </div>
 
