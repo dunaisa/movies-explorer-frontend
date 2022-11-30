@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
-
 import './MoviesCard.css';
 
-
-const MoviesCard = ({ movie, onMouseEnter, onMouseLeave, isLiked, onMovieSave, onMovieDelete }) => {
+const MoviesCard = ({ movie, onMouseEnter, onMouseLeave, isLiked, onMovieSave, onMovieDelete, deleteMovie }) => {
 
   const location = useLocation();
 
@@ -23,7 +21,7 @@ const MoviesCard = ({ movie, onMouseEnter, onMouseLeave, isLiked, onMovieSave, o
       onMovieSave(movie)
     }
     else {
-      onMovieDelete(movie.id)
+      deleteMovie(movie.id)
     }
   }
 

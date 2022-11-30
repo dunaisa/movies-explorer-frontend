@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import './EditProfileForm.css';
 import { useForm } from 'react-hook-form';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-const EditProfileForm = ({ onEdit, isUserName, isUserEmail, signOut, isError, errorMessage }) => {
+const EditProfileForm = ({ onEdit, signOut, isError, errorMessage }) => {
 
-  // const [name, setName] = useState(isUserName);
+  const currentUser = React.useContext(CurrentUserContext);
 
   const {
     register,
@@ -25,7 +26,7 @@ const EditProfileForm = ({ onEdit, isUserName, isUserEmail, signOut, isError, er
 
   return (
     <div className="edit-form">
-      <span className="edit-form__heading">{`Привет, ${isUserName}!`}</span>
+      <span className="edit-form__heading">{`Привет, ${currentUser.name}!`}</span>
 
       <form className="edit-form__container" onSubmit={handleSubmit(onSubmit)}>
         <fieldset className="edit-form__fieldset">
@@ -39,11 +40,10 @@ const EditProfileForm = ({ onEdit, isUserName, isUserEmail, signOut, isError, er
                 minLength: {
                   value: 2,
                   message: "Минимальная длина имени 2 символа."
-                }
-
+                },
               })}
               className="edit-form__input"
-              placeholder={isUserName}
+              placeholder={currentUser.name}
               id="name-edit"
               type="text" />
 
@@ -64,7 +64,7 @@ const EditProfileForm = ({ onEdit, isUserName, isUserEmail, signOut, isError, er
 
               })}
               className="edit-form__input"
-              placeholder={isUserEmail}
+              placeholder={currentUser.email}
               id="email"
               type="email" />
 

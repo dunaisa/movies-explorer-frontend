@@ -30,8 +30,8 @@ function App() {
   const [errorMessage, setErrorMessage] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
 
-  const [isUserName, setIsUserName] = useState('');
-  const [isUserEmail, setIsUserEmail] = useState('');
+  // const [isUserName, setIsUserName] = useState('');
+  // const [isUserEmail, setIsUserEmail] = useState('');
 
   const [savedMoviesIds, setSavedMoviesIds] = useState([]);
 
@@ -50,8 +50,8 @@ function App() {
             if (res) {
               setLoggedIn(true);
               //Установим в профайле имя и почту юзера
-              setIsUserName(res.name)
-              setIsUserEmail(res.email)
+              // setIsUserName(res.name)
+              // setIsUserEmail(res.email)
               history.push('/movies');
             }
           })
@@ -60,6 +60,17 @@ function App() {
     }
     tokenCheck()
   }, [history, loggedIn])
+
+  useEffect(() => {
+    if (loggedIn === true) {
+      mainApi.getInfo()
+        .then((res) => {
+          setCurrentUser(res)
+        })
+        .catch((err) => console.log(`${err}`))
+    }
+
+  }, [loggedIn])
 
   const handleOnRegister = ({ name, email, password }) => {
     auth.register({ name, email, password })
@@ -105,9 +116,16 @@ function App() {
   const handleEditProfile = (data) => {
     mainApi.setInfo(data)
       .then((res) => {
-        setCurrentUser(res)
-        setIsUserName(res.name);
-        setIsUserEmail(res.email);
+        if (isCurrentUser.name === res.name && isCurrentUser.email === res.email) {
+          console.log(isCurrentUser.name)
+          console.log(res.name)
+          setErrorMessage('Имя и почта должны отличаться от предыдущих значений хотя бы на один символ.')
+          setIsError(true)
+        } else {
+          setCurrentUser(res)
+          setErrorMessage('Успешно!')
+          setIsError(true)
+        }
       })
       .catch((err) => {
         setErrorMessage((`${err}`))
@@ -137,17 +155,6 @@ function App() {
 
 
   }, [])
-
-  // useEffect(() => {
-  //   if (loggedIn === true) {
-  //     mainApi.getInfo()
-  //       .then((res) => {
-  //         setCurrentUser(res);
-  //       })
-  //       .catch((err) => console.log(`${err}`))
-  //   }
-
-  // }, [loggedIn])
 
   function handleInputChange(e) {
     setQuery(e.target.value)
@@ -191,18 +198,23 @@ function App() {
 
   useEffect(() => {
     setSavedMoviesIds(savedMoviesList.map((film) => film.movieId))
-    console.log(savedMoviesList.map((film) => film.movieId))
   }, [savedMoviesList])
 
   const onMovieDelete = (_id) => {
     mainApi.deleteMovie(_id)
       .then(() => {
-        setSavedMoviesList(savedMoviesList.filter((movie) => {
-          return movie._id !== _id
-        }))
-
+        setSavedMoviesList(savedMoviesList.filter((movie) => movie._id !== _id))
       })
       .catch((err) => console.log(`${err}`))
+  }
+
+  const deleteMovie = (_id) => {
+    const item = savedMoviesList.find((movie) => {
+      return (movie.owner === isCurrentUser._id && movie.movieId === _id)
+    })
+    setSavedMoviesList(savedMoviesList.filter((movie) => {
+      return movie !== item
+    }))
   }
 
   useEffect(() => {
@@ -270,13 +282,13 @@ function App() {
           <Register onRegister={handleOnRegister} isError={isError} errorMessage={errorMessage} />
         </Route>
 
-        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} onMovieDelete={onMovieDelete} savedMoviesIds={savedMoviesIds} />
+        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} />
 
         <Route exact path="/saved-movies">
           <SavedMovies newMoviesList={savedMoviesList} onMovieDelete={onMovieDelete} />
         </Route>
 
-        <ProtectedRoute exact path="/profile" component={Profile} loggedIn={loggedIn} isUserName={isUserName} isUserEmail={isUserEmail} onEdit={handleEditProfile} signOut={signOut} isError={isError} errorMessage={errorMessage} />
+        <ProtectedRoute exact path="/profile" component={Profile} loggedIn={loggedIn} onEdit={handleEditProfile} signOut={signOut} isError={isError} errorMessage={errorMessage} />
 
         <Route exact path="*">
           {loggedIn ? <Redirect to="/movies" /> : <Redirect to="/signup" />}

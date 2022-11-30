@@ -63,16 +63,16 @@ class MainApi {
 
   // // Загрузка информации о пользователе с сервера
 
-  // getInfo() {
-  //   return fetch(`${this._url}/users/me`, {
-  //     method: 'GET',
-  //     headers: {
-  //       authorization: `Bearer ${localStorage.getItem('token')}`,
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  //     .then(this._checkResponse);
-  // }
+  getInfo() {
+    return fetch(`${this._url}/users/me`, {
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(this._checkResponse);
+  }
 
   // Загрузка информации о пользователе на сервер
 
