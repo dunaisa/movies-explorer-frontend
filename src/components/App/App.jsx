@@ -24,6 +24,7 @@ function App() {
   const [savedMoviesList, setSavedMoviesList] = useState([]);
 
   const [query, setQuery] = useState('');
+  const [querySavedMovies, setQuerySavedMovies] = useState('');
 
   const history = useHistory();
   const [isError, setIsError] = useState(false);
@@ -132,32 +133,28 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [moviesNotFind, setMoviesNotFind] = useState(false);
 
-  useEffect(() => {
 
-    moviesApi.getMovies()
-      .then((res) => {
-        setIsloading(true);
-        setMovies(res);
-      })
-      .catch((err) => console.log(`${err}`))
-      .finally(() => {
-        setIsloading(false)
-      })
-
-
-  }, [])
 
   function handleInputChange(e) {
     setQuery(e.target.value)
   }
 
+  function handleInputSavedMoviesChange(e) {
+    setQuerySavedMovies(e.target.value)
+  }
+
   const [filtredMovieArray, setFiltredMovieArray] = useState([]);
   const [isThumblerActive, setIsThumblerActive] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const [filterShortFilm, setFilterShortFilm] = useState([]);
   const [filterShortSavedFilm, setFilterShortSavedFilm] = useState([]);
 
   const toggleThumbler = () => {
     setIsThumblerActive(!isThumblerActive)
+  }
+
+  const toggleCheck = () => {
+    setIsChecked(!isChecked)
   }
 
   // const searchKey = ["nameRU"]
@@ -167,7 +164,7 @@ function App() {
   )
 
   const filteredSavedMovies = savedMoviesList.filter((items) =>
-    items.nameRU.toLowerCase().includes(query.toLowerCase())
+    items.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase())
   )
 
   const findShortMovies = filteredMovies.filter((item) => item.duration < 40);
@@ -197,6 +194,19 @@ function App() {
   const localMovie = localStorage.getItem('movies');
   const localQuery = localStorage.getItem('query');
   const localThumbler = JSON.parse(localStorage.getItem('thumbler'));
+
+  useEffect(() => {
+
+    moviesApi.getMovies()
+      .then((res) => {
+        setIsloading(true);
+        setMovies(res);
+      })
+      .catch((err) => console.log(`${err}`))
+      .finally(() => {
+        setIsloading(false)
+      })
+  }, [])
 
   // dictionary
 
@@ -297,7 +307,7 @@ function App() {
 
         <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={isThumblerActive ? filterShortFilm : filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} handleShortMovies={handleShortMovies} />
 
-        <ProtectedRoute exact path="/saved-movies" component={SavedMovies} loggedIn={loggedIn} newMoviesList={isThumblerActive ? filterShortSavedFilm : savedMoviesList} onMovieDelete={onMovieDelete} onSearch={handleSavedMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesNotFind={moviesNotFind} handleShortMovies={handleShortSavedMovies} />
+        <ProtectedRoute exact path="/saved-movies" component={SavedMovies} loggedIn={loggedIn} newMoviesList={isChecked ? filterShortSavedFilm : savedMoviesList} onMovieDelete={onMovieDelete} onSearch={handleSavedMovieSearch} onChange={handleInputSavedMoviesChange} query={querySavedMovies} isChecked={isChecked} toggleThumbler={toggleCheck} isLoading={isLoading} handleShortMovies={handleShortSavedMovies} />
 
         <ProtectedRoute exact path="/profile" component={Profile} loggedIn={loggedIn} onEdit={handleEditProfile} signOut={signOut} isError={isError} errorMessage={errorMessage} />
 

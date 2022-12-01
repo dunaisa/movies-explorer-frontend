@@ -7,7 +7,7 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import Footer from '../Footer/Footer';
 import HeaderMain from '../HeaderMain/HeaderMain';
 
-const SavedMovies = ({ newMoviesList, onMovieDelete, isThumblerActive, toggleThumbler, handleShortMovies, onSearch, onChange, query }) => {
+const SavedMovies = ({ newMoviesList, onMovieDelete, isChecked, toggleThumbler, handleShortMovies, onSearch, onChange, query }) => {
 
   return (
     <>
@@ -15,7 +15,7 @@ const SavedMovies = ({ newMoviesList, onMovieDelete, isThumblerActive, toggleThu
         <HeaderMain />
       </Header>
 
-      <SearchForm isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} handleShortMovies={handleShortMovies} onSearch={onSearch} onChange={onChange} query={query} />
+      <SearchForm isThumblerActive={isChecked} toggleThumbler={toggleThumbler} handleShortMovies={handleShortMovies} onSearch={onSearch} onChange={onChange} query={query} />
 
       <MoviesCardList>
         {newMoviesList.map((movieSave) => (
