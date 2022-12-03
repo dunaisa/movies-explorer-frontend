@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch, Link, NavLink, useHistory, Redirect } from 'react-router-dom';
+import { Route, Switch, Link, useHistory, Redirect } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext.js';
 import Register from "../Register/Register";
 import Login from "../Login/Login";
@@ -9,11 +9,12 @@ import Movies from '../Movies/Movies';
 import Main from '../Main/Main';
 import Profile from '../Profile/Profile';
 import SavedMovies from '../SavedMovies/SavedMovies';
-// import PageNotFound from '../PageNotFound/PageNotFound';
+import PageNotFound from '../PageNotFound/PageNotFound';
 import ProtectedRoute from '../ProtectedRoute';
 import { moviesApi } from '../../utils/MoviesApi';
 import { mainApi } from '../../utils/MainApi';
 import * as auth from '../../utils/Auth';
+import ProtectedRouteAuth from '../ProtectedRouteAuth.jsx';
 
 function App() {
 
@@ -297,13 +298,9 @@ function App() {
           <Footer />
         </Route>
 
-        <Route exact path="/signin">
-          <Login onLogin={handleOnLogin} isError={isError} errorMessage={errorMessage} />
-        </Route>
+        <ProtectedRouteAuth exact path="/signin" component={Login} loggedIn={loggedIn} onLogin={handleOnLogin} isError={isError} errorMessage={errorMessage} />
 
-        <Route exact path="/signup">
-          <Register onRegister={handleOnRegister} isError={isError} errorMessage={errorMessage} />
-        </Route>
+        <ProtectedRouteAuth exact path="/signup" component={Register} loggedIn={loggedIn} onRegister={handleOnRegister} isError={isError} errorMessage={errorMessage} />
 
         <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={isThumblerActive ? filterShortFilm : filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} handleShortMovies={handleShortMovies} />
 
@@ -311,8 +308,12 @@ function App() {
 
         <ProtectedRoute exact path="/profile" component={Profile} loggedIn={loggedIn} onEdit={handleEditProfile} signOut={signOut} isError={isError} errorMessage={errorMessage} />
 
-        <Route exact path="*">
-          {loggedIn ? <Redirect to="/movies" /> : <Redirect to="/signup" />}
+        <Route exact path="/404">
+          <PageNotFound />
+        </Route>
+
+        <Route exact path="/*">
+          <PageNotFound />
         </Route>
       </Switch>
     </CurrentUserContext.Provider>
