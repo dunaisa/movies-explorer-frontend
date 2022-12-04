@@ -48,17 +48,22 @@ function App() {
           .then((res) => {
             if (res) {
               setLoggedIn(true);
-              //Установим в профайле имя и почту юзера
-              // setIsUserName(res.name)
-              // setIsUserEmail(res.email)
-              history.push('/movies');
             }
           })
           .catch((err) => console.log(`${err}`))
       }
     }
     tokenCheck()
-  }, [history, loggedIn])
+  }, [loggedIn])
+
+  const navigate = useHistory();
+
+  useEffect(() => {
+    window.onbeforeunload = () => {
+      window.sessionStorage.setItem('lastRoute', JSON.stringify(window.location.pathname))
+    }
+    navigate.push(JSON.parse(window.sessionStorage.getItem('lastRoute') || '{}'))
+  }, [loggedIn])
 
   useEffect(() => {
     if (loggedIn === true) {
@@ -75,13 +80,8 @@ function App() {
     auth.register({ name, email, password })
       .then((res) => {
         console.log(res)
-        if (res) {
-          // setIsAuth(true);
-          setLoggedIn(true);
-          history.push('/movies');
-        } else {
-          // setIsError(true);
-        }
+        setLoggedIn(true);
+        history.push('/movies');
       })
       .catch((err) => {
         setErrorMessage((`${err}`))
@@ -133,8 +133,6 @@ function App() {
 
   const [movies, setMovies] = useState([]);
   const [moviesNotFind, setMoviesNotFind] = useState(false);
-
-
 
   function handleInputChange(e) {
     setQuery(e.target.value)
@@ -308,11 +306,7 @@ function App() {
 
         <ProtectedRoute exact path="/profile" component={Profile} loggedIn={loggedIn} onEdit={handleEditProfile} signOut={signOut} isError={isError} errorMessage={errorMessage} />
 
-        <Route exact path="/404">
-          <PageNotFound />
-        </Route>
-
-        <Route exact path="/*">
+        <Route exact path="*">
           <PageNotFound />
         </Route>
       </Switch>
