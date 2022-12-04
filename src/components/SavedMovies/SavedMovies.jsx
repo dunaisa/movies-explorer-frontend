@@ -4,8 +4,6 @@ import Header from '../Header/Header';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import MoviesCard from '../MoviesCard/MoviesCard';
-import Footer from '../Footer/Footer';
-import HeaderMain from '../HeaderMain/HeaderMain';
 
 const SavedMovies = ({ newMoviesList, onMovieDelete, isChecked, toggleThumbler, handleShortMovies, onSearch, onChange, query }) => {
 
@@ -25,8 +23,6 @@ const SavedMovies = ({ newMoviesList, onMovieDelete, isChecked, toggleThumbler, 
         ))}
 
       </MoviesCardList>
-
-      <Footer />
 
     </>
   );

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './Movies.css';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import MoviesCard from '../MoviesCard/MoviesCard';
-import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import HeaderMain from '../HeaderMain/HeaderMain';
 import SearchForm from '../SearchForm/SearchForm';
@@ -86,8 +85,6 @@ const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, qu
           ))}
 
         </MoviesCardList>}
-
-      <Footer />
     </>
   );
 }
