@@ -70,9 +70,9 @@ const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, qu
 
   return (
     <>
-      <Header headerClassName="header header-main header_type_movies">
+      {/* <Header headerClassName="header header-main header_type_movies">
         <HeaderMain />
-      </Header>
+      </Header> */}
 
       <SearchForm onSearch={onSearch} onChange={onChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} handleShortMovies={handleShortMovies} />
 

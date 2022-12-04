@@ -18,7 +18,6 @@ const Login = ({ onLogin, isError, errorMessage }) => {
   });
 
   const onSubmit = (values) => {
-    console.log(values)
     onLogin(values);
     reset();
   }

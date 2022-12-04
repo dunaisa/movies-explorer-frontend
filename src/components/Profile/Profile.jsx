@@ -9,12 +9,12 @@ import EditProfileForm from '../EditProfileForm/EditProfileForm';
 
 const Profile = ({ onEdit, signOut, isError, errorMessage }) => {
 
-  const [menuActive, setMenuActive] = React.useState(false);
-  const [crossBtn, setCrossBtn] = React.useState(false);
+  // const [menuActive, setMenuActive] = React.useState(false);
+  // const [crossBtn, setCrossBtn] = React.useState(false);
 
   return (
     <>
-      <Header headerClassName="header header-main header_type_movies">
+      {/* <Header headerClassName="header header-main header_type_movies">
         <ul className="header-main__items">
           <li className="header-main__item">
             <NavLink className="header-main__link header-main__link_type_movies" activeClassName="" to="/movies">Фильмы</NavLink>
@@ -44,7 +44,7 @@ const Profile = ({ onEdit, signOut, isError, errorMessage }) => {
           ></span>
         </div>
 
-      </Header>
+      </Header> */}
 
       <EditProfileForm onEdit={onEdit} signOut={signOut} isError={isError} errorMessage={errorMessage} />
 

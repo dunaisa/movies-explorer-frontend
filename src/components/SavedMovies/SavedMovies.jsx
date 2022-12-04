@@ -11,9 +11,9 @@ const SavedMovies = ({ newMoviesList, onMovieDelete, isChecked, toggleThumbler, 
 
   return (
     <>
-      <Header headerClassName="header header-main header_type_movies">
+      {/* <Header headerClassName="header header-main header_type_movies">
         <HeaderMain />
-      </Header>
+      </Header> */}
 
       <SearchForm isThumblerActive={isChecked} toggleThumbler={toggleThumbler} handleShortMovies={handleShortMovies} onSearch={onSearch} onChange={onChange} query={query} />
 

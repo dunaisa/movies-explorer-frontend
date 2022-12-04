@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch, Link, useHistory, Redirect } from 'react-router-dom';
+import { Route, Switch, Link, useHistory, Redirect, useLocation } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext.js';
 import Register from "../Register/Register";
 import Login from "../Login/Login";
@@ -28,6 +28,7 @@ function App() {
   const [querySavedMovies, setQuerySavedMovies] = useState('');
 
   const history = useHistory();
+  const location = useLocation();
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
@@ -38,6 +39,7 @@ function App() {
   // const [isError, setIsError] = useState(false);
 
   useEffect(() => {
+    const path = location.pathname;
     function tokenCheck() {
       // если у пользователя есть токен в localStorage, 
       // эта функция проверит, действующий он или нет
@@ -48,14 +50,14 @@ function App() {
           .then((res) => {
             if (res) {
               setLoggedIn(true);
-              history.push('/movies')
+              history.push(path);
             }
           })
           .catch((err) => console.log(`${err}`))
       }
     }
     tokenCheck()
-  }, [history, loggedIn])
+  }, [loggedIn, history])
 
   // const navigate = useHistory();
 
@@ -95,9 +97,8 @@ function App() {
       })
   }
 
-  function handleOnLogin(email, password) {
-    console.log('ok')
-    auth.authorize(email, password)
+  function handleOnLogin({ email, password }) {
+    auth.authorize({ email, password })
       .then(() => {
         setLoggedIn(true);
         history.push('/movies');
@@ -280,27 +281,17 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={isCurrentUser}>
+      <Route exact path={['/', '/movies', '/saved-movies', '/profile']}>
+        <Header loggedIn={loggedIn} />
+      </Route>
 
       <Switch>
-        <Route exact path="/">
-          <Header headerClassName="header header_type_intro">
-            <ul className="header__items">
-              <li className="header__item">
-                <Link className="header__link header__link_type_signup" to="/signup">Регистрация</Link>
-              </li>
 
-              <li className="header__item">
-                <Link className="header__link header__link_type_signin" to="/signin">Войти</Link>
-              </li>
-            </ul>
-          </Header>
-          <Main />
-          <Footer />
-        </Route>
+        <ProtectedRouteAuth exact path="/" component={Main} loggedIn={loggedIn} />
 
-        <ProtectedRouteAuth exact path="/signin" component={Login} loggedIn={!loggedIn} onLogin={handleOnLogin} isError={isError} errorMessage={errorMessage} />
+        <ProtectedRouteAuth exact path="/signin" component={Login} loggedIn={loggedIn} onLogin={handleOnLogin} isError={isError} errorMessage={errorMessage} />
 
-        <ProtectedRouteAuth exact path="/signup" component={Register} loggedIn={!loggedIn} onRegister={handleOnRegister} isError={isError} errorMessage={errorMessage} />
+        <ProtectedRouteAuth exact path="/signup" component={Register} loggedIn={loggedIn} onRegister={handleOnRegister} isError={isError} errorMessage={errorMessage} />
 
         <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={isThumblerActive ? filterShortFilm : filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} handleShortMovies={handleShortMovies} />
 
@@ -308,13 +299,19 @@ function App() {
 
         <ProtectedRoute exact path="/profile" component={Profile} loggedIn={loggedIn} onEdit={handleEditProfile} signOut={signOut} isError={isError} errorMessage={errorMessage} />
 
-        <Route exact path="*">
+        <Route exact path="/404">
           <PageNotFound />
+        </Route>
+
+        <Route exact path="*">
+          <Redirect to="/404" />
         </Route>
 
       </Switch>
 
-
+      <Route exact path={['/', '/movies', '/saved-movies', '/profile']}>
+        <Footer />
+      </Route>
     </CurrentUserContext.Provider>
   );
 }
