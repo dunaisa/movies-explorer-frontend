@@ -48,22 +48,23 @@ function App() {
           .then((res) => {
             if (res) {
               setLoggedIn(true);
+              history.push('/movies')
             }
           })
           .catch((err) => console.log(`${err}`))
       }
     }
     tokenCheck()
-  }, [loggedIn])
+  }, [history, loggedIn])
 
-  const navigate = useHistory();
+  // const navigate = useHistory();
 
-  useEffect(() => {
-    window.onbeforeunload = () => {
-      window.sessionStorage.setItem('lastRoute', JSON.stringify(window.location.pathname))
-    }
-    navigate.push(JSON.parse(window.sessionStorage.getItem('lastRoute') || '{}'))
-  }, [loggedIn])
+  // useEffect(() => {
+  //   window.onbeforeunload = () => {
+  //     window.sessionStorage.setItem('lastRoute', JSON.stringify(window.location.pathname))
+  //   }
+  //   navigate.push(JSON.parse(window.sessionStorage.getItem('lastRoute') || '{}'))
+  // }, [loggedIn])
 
   useEffect(() => {
     if (loggedIn === true) {
@@ -94,8 +95,9 @@ function App() {
       })
   }
 
-  function handleOnLogin({ email, password }) {
-    auth.authorize({ email, password })
+  function handleOnLogin(email, password) {
+    console.log('ok')
+    auth.authorize(email, password)
       .then(() => {
         setLoggedIn(true);
         history.push('/movies');
@@ -296,9 +298,9 @@ function App() {
           <Footer />
         </Route>
 
-        <ProtectedRouteAuth exact path="/signin" component={Login} loggedIn={loggedIn} onLogin={handleOnLogin} isError={isError} errorMessage={errorMessage} />
+        <ProtectedRouteAuth exact path="/signin" component={Login} loggedIn={!loggedIn} onLogin={handleOnLogin} isError={isError} errorMessage={errorMessage} />
 
-        <ProtectedRouteAuth exact path="/signup" component={Register} loggedIn={loggedIn} onRegister={handleOnRegister} isError={isError} errorMessage={errorMessage} />
+        <ProtectedRouteAuth exact path="/signup" component={Register} loggedIn={!loggedIn} onRegister={handleOnRegister} isError={isError} errorMessage={errorMessage} />
 
         <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={isThumblerActive ? filterShortFilm : filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} handleShortMovies={handleShortMovies} />
 
@@ -309,7 +311,10 @@ function App() {
         <Route exact path="*">
           <PageNotFound />
         </Route>
+
       </Switch>
+
+
     </CurrentUserContext.Provider>
   );
 }
