@@ -287,7 +287,7 @@ function App() {
 
       <Switch>
 
-        <ProtectedRouteAuth exact path="/" component={Main} loggedIn={loggedIn} />
+        <Route exact path="/" component={Main} />
 
         <ProtectedRouteAuth exact path="/signin" component={Login} loggedIn={loggedIn} onLogin={handleOnLogin} isError={isError} errorMessage={errorMessage} />
 
