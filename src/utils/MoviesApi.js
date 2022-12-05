@@ -17,7 +17,6 @@ class Api {
     return fetch(`${this._url}`, {
       method: 'GET',
       headers: {
-        authorization: `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json',
         "Accept": "application/json"
       }
@@ -29,7 +28,7 @@ class Api {
 export const moviesApi = new Api({
   url: 'https://api.nomoreparties.co/beatfilm-movies',
   headers: {
-    authorization: `Bearer ${localStorage.getItem('token')}`,
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    "Accept": "application/json"
   }
 });

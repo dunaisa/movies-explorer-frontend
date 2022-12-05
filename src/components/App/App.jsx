@@ -175,6 +175,7 @@ function App() {
   const findShortSavedMovies = savedMoviesList.filter((item) => item.duration < 40);
 
   const handleMovieSearch = () => {
+
     localStorage.setItem('query', `${query}`);
     localStorage.setItem('movies', JSON.stringify(filteredMovies));
     localStorage.setItem('thumbler', isThumblerActive);
@@ -249,6 +250,7 @@ function App() {
           setSavedMoviesList(res)
         }
       })
+      .catch((err) => console.log(`${err}`));
   }, [])
 
   useEffect(() => {
