@@ -5,7 +5,7 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import SearchForm from '../SearchForm/SearchForm';
 import Preloader from '../../components/Preloader/Preloader';
 
-const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, query, isThumblerActive, toggleThumbler, savedMoviesIds, deleteMovie, handleShortMovies, isLoading }) => {
+const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, query, isThumblerActive, toggleThumbler, savedMoviesIds, deleteMovie, isLoading }) => {
 
   function debounce(fn, ms) {
     let timer
@@ -69,7 +69,7 @@ const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, qu
   return (
     <>
 
-      <SearchForm onSearch={onSearch} onChange={onChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} handleShortMovies={handleShortMovies} />
+      <SearchForm onSearch={onSearch} onChange={onChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} />
 
       {isLoading && <Preloader />}
 
