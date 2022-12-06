@@ -10,7 +10,9 @@ const Form = ({ formHeading, onSubmit, nameLabel, emailLabel, passwordLabel, chi
 
   return (
     <div className="form register login">
-      <img src={Logo} alt="Логотип" className="form__logo" />
+      <a href="/" className="form__link-logo">
+        <img src={Logo} alt="Логотип" className="form__logo" />
+      </a>
       <h1 className="form__heading">{formHeading}</h1>
 
       <form onSubmit={onSubmit} className="form__container" noValidate>

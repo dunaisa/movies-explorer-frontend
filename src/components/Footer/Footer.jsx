@@ -4,7 +4,7 @@ import './Footer.css';
 const Footer = () => {
   const year = new Date().getFullYear();
   return (
-    <div className="footer">
+    <footer className="footer">
 
       <span className="footer__heading">Учебный проект Яндекс.Практикум х BeatFilm.</span>
 
@@ -20,7 +20,7 @@ const Footer = () => {
           </li>
         </ul>
       </div>
-    </div>
+    </footer>
   );
 }
 

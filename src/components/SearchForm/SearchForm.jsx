@@ -1,6 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import './SearchForm.css';
+import { useFormWithValidation } from '../../utils/useForm';
 import btnIcon from '../../images/search-form-icon.svg';
 
 const SearchForm = ({ onSearch, onChange, query, isThumblerActive, toggleThumbler, handleShortMovies }) => {
@@ -9,7 +10,6 @@ const SearchForm = ({ onSearch, onChange, query, isThumblerActive, toggleThumble
     register,
     formState: {
       errors,
-      isValid
     },
     handleSubmit,
     reset
@@ -27,17 +27,17 @@ const SearchForm = ({ onSearch, onChange, query, isThumblerActive, toggleThumble
       <form action="post" className="search-form__container" onSubmit={handleSubmit(onSearchSubmit)} noValidate>
 
         <input
-          {...register('text', {
+          {...register('query', {
             required: "Нужно ввести ключевое слово.",
 
           })}
           className="search-form__input"
           placeholder="Фильмы"
-          id="text"
+          id="query"
           type="text"
           value={query}
           onChange={onChange} />
-        <span className="search-form__text search-form__text_type_error">{errors.text && errors.text.message}</span>
+        <span className="search-form__text search-form__text_type_error">{errors.query && errors.query.message}</span>
 
 
         <button className="search-form__btn" type="post">

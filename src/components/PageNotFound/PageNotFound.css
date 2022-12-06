@@ -1,5 +1,6 @@
 .error-page {
-  display: none;
+  display: flex;
+  max-height: 100vh;
   flex-direction: column;
   text-align: center;
   margin: 246px auto 60px;
@@ -33,7 +34,9 @@
   line-height: 16.94px;
   padding: 0;
   margin: 184px 0 0;
-  text-decoration: none;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 768px) {

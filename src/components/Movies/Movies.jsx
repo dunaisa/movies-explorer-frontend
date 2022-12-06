@@ -2,14 +2,10 @@ import React, { useState, useEffect } from 'react';
 import './Movies.css';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import MoviesCard from '../MoviesCard/MoviesCard';
-import Header from '../Header/Header';
-import HeaderMain from '../HeaderMain/HeaderMain';
 import SearchForm from '../SearchForm/SearchForm';
-// import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
+import Preloader from '../../components/Preloader/Preloader';
 
-const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, query, isThumblerActive, toggleThumbler, savedMoviesIds, deleteMovie, handleShortMovies }) => {
-
-  // const userContent = React.useContext(CurrentUserContext);
+const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, query, isThumblerActive, toggleThumbler, savedMoviesIds, deleteMovie, handleShortMovies, isLoading }) => {
 
   function debounce(fn, ms) {
     let timer
@@ -39,14 +35,17 @@ const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, qu
     }
   }
 
+  const debouncedHandleResize = debounce(function handleResize() {
+    setDimensions(window.screen.availWidth)
+  }, 1000)
+
   useEffect(() => {
     showDefaultMovieList()
+
+    window.removeEventListener('resize', debouncedHandleResize)
   }, [screenWidth])
 
   useEffect(() => {
-    const debouncedHandleResize = debounce(function handleResize() {
-      setDimensions(window.screen.availWidth)
-    }, 1000)
     window.addEventListener('resize', debouncedHandleResize)
   }, [screenWidth])
 
@@ -69,14 +68,13 @@ const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, qu
 
   return (
     <>
-      {/* <Header headerClassName="header header-main header_type_movies">
-        <HeaderMain />
-      </Header> */}
 
       <SearchForm onSearch={onSearch} onChange={onChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} handleShortMovies={handleShortMovies} />
 
+      {isLoading && <Preloader />}
+
       {moviesNotFind ? <span className="movies__not-found-text">Ничего не найдено</span> :
-        <MoviesCardList onClickBtn={showMore} isVisible={hideButton()}>
+        (!isLoading && <MoviesCardList onClickBtn={showMore} isVisible={hideButton()}>
 
           {movieCards.map((movie) => (
 
@@ -84,7 +82,7 @@ const Movies = ({ moviesList, moviesNotFind, onMovieSave, onSearch, onChange, qu
 
           ))}
 
-        </MoviesCardList>}
+        </MoviesCardList>)}
     </>
   );
 }

@@ -5,10 +5,9 @@ import profileIcon from '../../images/profile-icon.svg';
 
 const BurgerMenu = ({ active }) => {
 
-
-
   return (
     <div className={`header-burger-menu ${active ? "header-burger-menu_active" : ""}`}>
+
       <div className="header-burger-menu__container">
         <ul className="header-burger-menu__items">
 

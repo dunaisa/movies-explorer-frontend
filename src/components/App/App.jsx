@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch, Link, useHistory, Redirect, useLocation } from 'react-router-dom';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext.js';
 import Register from "../Register/Register";
 import Login from "../Login/Login";
@@ -35,9 +35,6 @@ function App() {
 
   const [savedMoviesIds, setSavedMoviesIds] = useState([]);
 
-  // const [isAuth, setIsAuth] = useState(false);
-  // const [isError, setIsError] = useState(false);
-
   useEffect(() => {
     const path = location.pathname;
     function tokenCheck() {
@@ -58,15 +55,6 @@ function App() {
     }
     tokenCheck()
   }, [loggedIn, history])
-
-  // const navigate = useHistory();
-
-  // useEffect(() => {
-  //   window.onbeforeunload = () => {
-  //     window.sessionStorage.setItem('lastRoute', JSON.stringify(window.location.pathname))
-  //   }
-  //   navigate.push(JSON.parse(window.sessionStorage.getItem('lastRoute') || '{}'))
-  // }, [loggedIn])
 
   useEffect(() => {
     if (loggedIn === true) {
@@ -152,14 +140,13 @@ function App() {
   const [filterShortSavedFilm, setFilterShortSavedFilm] = useState([]);
 
   const toggleThumbler = () => {
-    setIsThumblerActive(!isThumblerActive)
+    setIsThumblerActive(!isThumblerActive);
+    localStorage.setItem('thumbler', !isThumblerActive);
   }
 
   const toggleCheck = () => {
     setIsChecked(!isChecked)
   }
-
-  // const searchKey = ["nameRU"]
 
   const filteredMovies = movies.filter((items) =>
     items.nameRU.toLowerCase().includes(query.toLowerCase())
@@ -175,11 +162,16 @@ function App() {
   const findShortSavedMovies = savedMoviesList.filter((item) => item.duration < 40);
 
   const handleMovieSearch = () => {
+    setIsloading(true);
+    setTimeout(() => {
+      localStorage.setItem('query', `${query}`);
+      localStorage.setItem('movies', JSON.stringify(filteredMovies));
+      console.log(filteredMovies)
 
-    localStorage.setItem('query', `${query}`);
-    localStorage.setItem('movies', JSON.stringify(filteredMovies));
-    localStorage.setItem('thumbler', isThumblerActive);
-    setFiltredMovieArray(filteredMovies)
+      setFiltredMovieArray(filteredMovies);
+
+      setIsloading(false);
+    }, 2000)
   }
 
   const handleSavedMovieSearch = () => {
@@ -202,24 +194,17 @@ function App() {
 
     moviesApi.getMovies()
       .then((res) => {
-        setIsloading(true);
         setMovies(res);
       })
       .catch((err) => console.log(`${err}`))
-      .finally(() => {
-        setIsloading(false)
-      })
   }, [])
-
-  // dictionary
-
-  // const [dic, setDic] = useState({});
 
   const onMovieSave = (data) => {
     mainApi.setUserMovies(data)
       .then((res) => {
         setSavedMoviesList([res, ...savedMoviesList])
       })
+      .catch((err) => console.log(`${err}`));
   }
 
   useEffect(() => {
@@ -273,10 +258,8 @@ function App() {
     }
   }, [localMovie, localQuery, localThumbler])
 
-
-
   const signOut = () => {
-    localStorage.removeItem('token');
+    localStorage.clear();
     setLoggedIn(false);
     history.push('/');
   }
@@ -291,29 +274,24 @@ function App() {
 
         <Route exact path="/" component={Main} />
 
-        <ProtectedRouteAuth exact path="/signin" component={Login} loggedIn={loggedIn} onLogin={handleOnLogin} isError={isError} errorMessage={errorMessage} />
-
-        <ProtectedRouteAuth exact path="/signup" component={Register} loggedIn={loggedIn} onRegister={handleOnRegister} isError={isError} errorMessage={errorMessage} />
-
         <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={isThumblerActive ? filterShortFilm : filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} handleShortMovies={handleShortMovies} />
 
         <ProtectedRoute exact path="/saved-movies" component={SavedMovies} loggedIn={loggedIn} newMoviesList={isChecked ? filterShortSavedFilm : savedMoviesList} onMovieDelete={onMovieDelete} onSearch={handleSavedMovieSearch} onChange={handleInputSavedMoviesChange} query={querySavedMovies} isChecked={isChecked} toggleThumbler={toggleCheck} isLoading={isLoading} handleShortMovies={handleShortSavedMovies} />
 
         <ProtectedRoute exact path="/profile" component={Profile} loggedIn={loggedIn} onEdit={handleEditProfile} signOut={signOut} isError={isError} errorMessage={errorMessage} />
 
-        <Route exact path="/404">
-          <PageNotFound />
-        </Route>
+        <ProtectedRouteAuth exact path="/signin" component={Login} loggedIn={loggedIn} onLogin={handleOnLogin} isError={isError} errorMessage={errorMessage} />
 
-        <Route exact path="*">
-          <Redirect to="/404" />
-        </Route>
+        <ProtectedRouteAuth exact path="/signup" component={Register} loggedIn={loggedIn} onRegister={handleOnRegister} isError={isError} errorMessage={errorMessage} />
+
+        <Route path="/*" component={PageNotFound} />
 
       </Switch>
 
       <Route exact path={['/', '/movies', '/saved-movies', '/profile']}>
         <Footer />
       </Route>
+
     </CurrentUserContext.Provider>
   );
 }

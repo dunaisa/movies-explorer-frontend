@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import './EditProfileForm.css';
-// import { useForm } from 'react-hook-form';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { useFormWithValidation } from '../../utils/useForm';
 
@@ -8,13 +7,17 @@ const EditProfileForm = ({ onEdit, signOut, isError, errorMessage }) => {
 
   const currentUser = React.useContext(CurrentUserContext);
 
-  const { values, handleChange, errors, isValid, resetForm } = useFormWithValidation();
+  const { values, setValues, handleChange, errors, isValid, resetForm } = useFormWithValidation();
 
   const onSubmit = (evt) => {
     evt.preventDefault();
     onEdit(values);
     resetForm();
   }
+
+  useEffect(() => {
+    setValues(currentUser)
+  }, [setValues, currentUser])
 
   return (
     <div className="edit-form">
@@ -32,7 +35,7 @@ const EditProfileForm = ({ onEdit, signOut, isError, errorMessage }) => {
               onChange={handleChange}
               minLength="2"
               className="edit-form__input"
-              placeholder={currentUser.name}
+              placeholder="Имя"
               id="name"
               type="text"
               required />
@@ -46,12 +49,11 @@ const EditProfileForm = ({ onEdit, signOut, isError, errorMessage }) => {
               value={values.email || ''}
               onChange={handleChange}
               className="edit-form__input"
-              placeholder={currentUser.email}
+              placeholder="email"
               id="email"
               type="email"
               name="email"
               required />
-
 
             <span className="edit-form__text edit-form__text_type_error">{errors.email}</span>
 
@@ -68,11 +70,7 @@ const EditProfileForm = ({ onEdit, signOut, isError, errorMessage }) => {
             && values.email === currentUser.email) || !isValid}>Редактировать</button>
       </form>
 
-
-
-
       <button className="edit-form__signout" onClick={signOut}>Выйти из аккаунта</button>
-
 
     </div>
   );

@@ -12,9 +12,14 @@ const Header = ({ loggedIn }) => {
   const [menuActive, setMenuActive] = useState(false);
   const [crossBtn, setCrossBtn] = useState(false);
 
+  const handleBurgerMenuOpen = () => {
+    setMenuActive(!menuActive)
+    setCrossBtn(!crossBtn)
+  }
+
   return (
 
-    <div className={`header ${loggedIn ? 'header-main' : 'header_type_intro'}`}>
+    <header className={`header ${loggedIn ? 'header-main' : 'header_type_intro'}`}>
       <a href="/" className="header__link-logo">
         <img src={logo} alt="Логотип" className="header__logo" />
       </a>
@@ -48,10 +53,7 @@ const Header = ({ loggedIn }) => {
 
             <div
               className='header-main__burger-btn'
-              onClick={() => {
-                setMenuActive(!menuActive)
-                setCrossBtn(!crossBtn)
-              }}>
+              onClick={handleBurgerMenuOpen}>
               <span
                 className={` ${crossBtn ? 'header-main__burger-span_active' : 'header-main__burger-span'}`}
               ></span>
@@ -59,7 +61,7 @@ const Header = ({ loggedIn }) => {
 
       </nav>
 
-    </div>
+    </header>
   );
 }
 
