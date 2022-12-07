@@ -195,8 +195,8 @@ function App() {
   }
 
   const filteredSavedMovies = useMemo(() => {
-    if (querySavedMovies.length === 0 && !isChecked) {
-      return savedMoviesList;
+    if (querySavedMovies.length === 0 && isChecked) {
+      return savedMoviesList
     }
     return savedMoviesList.filter((movies) => movies.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase())).filter((movies) => (!isChecked || movies.duration < 40));
 
@@ -205,7 +205,6 @@ function App() {
   const handleSavedMovieSearch = () => {
     setIsloading(true);
     setTimeout(() => {
-
       setFilteredSavedList(filteredSavedMovies);
 
       setIsloading(false);
@@ -213,16 +212,11 @@ function App() {
   }
 
   useEffect(() => {
-    if (querySavedMovies.length === 0 && isChecked) {
-      setFilteredSavedList(filteredSavedMovies)
-    }
-    if (querySavedMovies.length > 0 && isChecked) {
-      setMoviesNotFind(true)
-    }
-    if (querySavedMovies.length > 0 && !isChecked) {
-      setFilteredSavedList(filteredSavedMovies)
-    }
-    setFilteredSavedList(savedMoviesList)
+
+    if (isChecked) {
+      setFilteredSavedList(savedMoviesList.filter((movies) => movies.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase())).filter((movies) => (!isChecked || movies.duration < 40)))
+    } else (
+      setFilteredSavedList(savedMoviesList))
   }, [savedMoviesList, querySavedMovies, isChecked])
 
   const onMovieSave = (data) => {
