@@ -22,19 +22,42 @@ function App() {
 
   const [isLoading, setIsloading] = useState(false);
 
-  const [savedMoviesList, setSavedMoviesList] = useState([]);
-
-  const [query, setQuery] = useState('');
-  const [querySavedMovies, setQuerySavedMovies] = useState('');
 
   const history = useHistory();
   const location = useLocation();
   const [isError, setIsError] = useState(false);
+  // Ошибка для формы логина/регистрации
   const [errorMessage, setErrorMessage] = useState('');
+  // Строка "фильм не найден"
+  const [moviesNotFind, setMoviesNotFind] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
   const [savedMoviesIds, setSavedMoviesIds] = useState([]);
 
+  // Стейты для сохраненных фильмов
+  const [querySavedMovies, setQuerySavedMovies] = useState('');
+  const [savedMoviesList, setSavedMoviesList] = useState([]);
+  const [filteredSavedList, setFilteredSavedList] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
+
+  // Стейты для всех фильмов
+  const [query, setQuery] = useState('');
+  const [movies, setMovies] = useState(null);
+  const [filtredMovieArray, setFiltredMovieArray] = useState([]);
+  const [isThumblerActive, setIsThumblerActive] = useState(false);
+
+  // Общая функция для поиска
+  const searchFilter = (data, searchQuery) => {
+    if (searchQuery) {
+      return data.filter((items) => {
+        return items.nameRU.toLowerCase().includes(searchQuery.toLowerCase())
+      })
+    }
+    return [];
+  };
+
+  //Общая функция для фильтрации по чекбоксу
+  const filterShortFilm = (moviesToFilter) => moviesToFilter.filter((item) => item.duration < 40);
 
   useEffect(() => {
     const path = location.pathname;
@@ -123,19 +146,15 @@ function App() {
       })
   }
 
-  const [movies, setMovies] = useState(null);
-  const [filtredMovieArray, setFiltredMovieArray] = useState([]);
-  const [isThumblerActive, setIsThumblerActive] = useState(false);
 
-  const [moviesNotFind, setMoviesNotFind] = useState(false);
+  // function handleInputChange(e) {
 
-  function handleInputChange(e) {
-    setQuery(e.target.value)
-  }
+  //   setQuery(e.target.value)
+  // }
 
-  function handleInputSavedMoviesChange(e) {
-    setQuerySavedMovies(e.target.value)
-  }
+  // function handleInputSavedMoviesChange(e) {
+  //   setQuerySavedMovies(e.target.value)
+  // }
 
   useEffect(() => {
     if (!movies && (query.length > 0 || isThumblerActive)) {
@@ -143,17 +162,48 @@ function App() {
       moviesApi.getMovies()
         .then((res) => {
           localStorage.setItem('movies', JSON.stringify(res));
+          // localStorage.setItem('thambler', isThumblerActive);
           setMovies(res);
         })
         .catch((err) => console.log(`${err}`))
 
     }
   }, [movies, query, isThumblerActive])
+  ///////////////////////////////////////////////////////////////////////
+  // const getAllMoviesData = () => {
+  //   moviesApi.getMovies()
+  //     .then((res) => {
+  //       localStorage.setItem('movies', JSON.stringify(res));
+  //       // localStorage.setItem('thambler', isThumblerActive);
+  //       setMovies(res);
+  //     })
+  //     .catch((err) => console.log(`${err}`))
+
+  // };
+
+  // useEffect(() => {
+  //   const allMoviesArr = JSON.parse(localStorage.getItem('allMovies'));
+  //   if (allMoviesArr) {
+  //     setMovies(allMoviesArr);
+  //   } else {
+  //     getAllMoviesData();
+  //   }
+  // }, [])
+
+  // const handleMovieSearch = (searchQuery) => {
+  //   setIsloading(true);
+  //   setTimeout(() => {
+  //     setQuery(searchQuery);
+  //     setFiltredMovieArray(searchFilter(movies, searchQuery));
+  //     setIsloading(true);
+  //   }, 600);
+  // };
 
   const filteredMovies = useMemo(() => {
     if (!movies) {
       return [];
     }
+
 
     return movies.filter((items) => items.nameRU.toLowerCase().includes(query.toLowerCase())).filter((items) => (!isThumblerActive || items.duration < 40))
 
@@ -178,6 +228,7 @@ function App() {
   }
 
   useEffect(() => {
+
     mainApi.getUserMovies()
       .then((res) => {
         if (res) {
@@ -187,37 +238,54 @@ function App() {
       .catch((err) => console.log(`${err}`));
   }, [])
 
-  const [filteredSavedList, setFilteredSavedList] = useState([]);
-  const [isChecked, setIsChecked] = useState(false);
-
   const toggleCheck = () => {
     setIsChecked(!isChecked)
   }
+  /////////////////////////////////////////////////////////////////////////////////
 
-  const filteredSavedMovies = useMemo(() => {
-    if (querySavedMovies.length === 0 && isChecked) {
-      return savedMoviesList
-    }
-    return savedMoviesList.filter((movies) => movies.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase())).filter((movies) => (!isChecked || movies.duration < 40));
-
-  }, [savedMoviesList, querySavedMovies, isChecked])
-
-  const handleSavedMovieSearch = () => {
-    setIsloading(true);
-    setTimeout(() => {
-      setFilteredSavedList(filteredSavedMovies);
-
-      setIsloading(false);
-    }, 600)
-  }
 
   useEffect(() => {
+    // console.log(savedMoviesList)
+    // setFilteredSavedList(searchFilter(savedMoviesList, querySavedMovies));
+    setFilteredSavedList(savedMoviesList)
+  }, [savedMoviesList, querySavedMovies]);
 
-    if (isChecked) {
-      setFilteredSavedList(savedMoviesList.filter((movies) => movies.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase())).filter((movies) => (!isChecked || movies.duration < 40)))
-    } else (
-      setFilteredSavedList(savedMoviesList))
-  }, [savedMoviesList, querySavedMovies, isChecked])
+  const handleSavedMovieSearch = (querySavedMovies) => {
+    console.log(savedMoviesList)
+    setFilteredSavedList(searchFilter(savedMoviesList, querySavedMovies));
+  };
+  ////////////////////////////////////////////////////////////////////////////
+  // const filteredSavedMovies = useMemo(() => {
+
+  //   if (querySavedMovies.length === 0 && !isChecked) {
+
+  //     return savedMoviesList
+  //   }
+
+  //   return savedMoviesList.filter((movies) => {
+  //     if (!!isChecked) {
+
+  //       return movies.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase()) && movies.duration < 40
+  //     }
+  //     return movies.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase())
+  //   })
+
+
+  // }, [savedMoviesList, querySavedMovies, isChecked])
+
+  // const handleSavedMovieSearch = () => {
+  //   setIsloading(true);
+  //   setTimeout(() => {
+
+  //     setFilteredSavedList(filteredSavedMovies);
+
+  //     setIsloading(false);
+  //   }, 600)
+  // }
+
+  // useEffect(() => {
+  //   setFilteredSavedList(savedMoviesList)
+  // }, [savedMoviesList, isChecked, querySavedMovies])
 
   const onMovieSave = (data) => {
     mainApi.setUserMovies(data)
@@ -253,25 +321,25 @@ function App() {
   const localQuery = localStorage.getItem('query');
   const localThumbler = JSON.parse(localStorage.getItem('thumbler'));
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    if (localFiltredMovie === null && localQuery === null) {
-      setFiltredMovieArray([])
-    } else if (JSON.parse(localFiltredMovie).length === 0 && localQuery.length > 0) {
-      setIsloading(true)
-      setQuery(localQuery)
-      setIsloading(false)
-      setIsThumblerActive(localThumbler)
-      setMoviesNotFind(true)
-    } else {
-      setMoviesNotFind(false)
-      setIsloading(true)
-      setQuery(localQuery)
-      setFiltredMovieArray(JSON.parse(localFiltredMovie))
-      setIsloading(false)
-      setIsThumblerActive(localThumbler)
-    }
-  }, [localFiltredMovie, localQuery, localThumbler])
+  //   if (localFiltredMovie === null && localQuery === null) {
+  //     setFiltredMovieArray([])
+  //   } else if (JSON.parse(localFiltredMovie).length === 0 && localQuery.length > 0) {
+  //     setIsloading(true)
+  //     setQuery(localQuery)
+  //     setIsloading(false)
+  //     setIsThumblerActive(localThumbler)
+  //     setMoviesNotFind(true)
+  //   } else {
+  //     setMoviesNotFind(false)
+  //     setIsloading(true)
+  //     setQuery(localQuery)
+  //     setFiltredMovieArray(JSON.parse(localFiltredMovie))
+  //     setIsloading(false)
+  //     setIsThumblerActive(localThumbler)
+  //   }
+  // }, [localFiltredMovie, localQuery, localThumbler])
 
   const signOut = () => {
     localStorage.clear();
@@ -289,9 +357,15 @@ function App() {
 
         <Route exact path="/" component={Main} />
 
-        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} />
+        {/* <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} /> */}
 
-        <ProtectedRoute exact path="/saved-movies" component={SavedMovies} loggedIn={loggedIn} newMoviesList={filteredSavedList} onMovieDelete={onMovieDelete} onSearch={handleSavedMovieSearch} onChange={handleInputSavedMoviesChange} query={querySavedMovies} isChecked={isChecked} toggleThumbler={toggleCheck} isLoading={isLoading} moviesNotFind={moviesNotFind} />
+        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} />
+
+        {/* setValues, quertySavedMovies, handleSubmit */}
+
+        {/* <ProtectedRoute exact path="/saved-movies" component={SavedMovies} loggedIn={loggedIn} newMoviesList={filteredSavedList} onMovieDelete={onMovieDelete} onSearch={handleSavedMovieSearch} query={querySavedMovies} onChange={handleInputSavedMoviesChange} setQuerySavedMovies={setQuerySavedMovies} isChecked={isChecked} toggleThumbler={toggleCheck} isLoading={isLoading} moviesNotFind={moviesNotFind} /> */}
+
+        <ProtectedRoute exact path="/saved-movies" component={SavedMovies} loggedIn={loggedIn} newMoviesList={isChecked ? filterShortFilm(filteredSavedList) : filteredSavedList} onMovieDelete={onMovieDelete} onSearch={handleSavedMovieSearch} query={querySavedMovies} setQuerySavedMovies={setQuerySavedMovies} isChecked={isChecked} toggleThumbler={toggleCheck} isLoading={isLoading} moviesNotFind={moviesNotFind} />
 
         <ProtectedRoute exact path="/profile" component={Profile} loggedIn={loggedIn} onEdit={handleEditProfile} signOut={signOut} isError={isError} errorMessage={errorMessage} />
 
