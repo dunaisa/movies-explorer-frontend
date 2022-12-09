@@ -22,11 +22,6 @@ function App() {
 
   const [isLoading, setIsloading] = useState(false);
 
-  const [savedMoviesList, setSavedMoviesList] = useState([]);
-
-  const [query, setQuery] = useState('');
-  const [querySavedMovies, setQuerySavedMovies] = useState('');
-
   const history = useHistory();
   const location = useLocation();
   const [isError, setIsError] = useState(false);
@@ -35,6 +30,29 @@ function App() {
 
   const [savedMoviesIds, setSavedMoviesIds] = useState([]);
 
+  // Стейты для всех фильмов
+
+  const [query, setQuery] = useState('');
+  const [movies, setMovies] = useState(null);
+  const [filtredMovieArray, setFiltredMovieArray] = useState([]);
+  const [isThumblerActive, setIsThumblerActive] = useState(false);
+
+  // Стейты для сохраненных фильмов
+
+  const [querySavedMovies, setQuerySavedMovies] = useState('');
+  const [isChecked, setIsChecked] = useState(false);
+  const [savedMoviesList, setSavedMoviesList] = useState([]);
+  const [filteredSavedList, setFilteredSavedList] = useState([]);
+
+  // Стейты в хранилище
+
+  const localFiltredMovie = localStorage.getItem('moviesFiltered');
+  const localQuery = localStorage.getItem('query');
+  const localThumbler = JSON.parse(localStorage.getItem('thumbler'));
+
+  // Стейт "фильмы не найдены"
+
+  const [moviesNotFind, setMoviesNotFind] = useState(false);
 
   useEffect(() => {
     const path = location.pathname;
@@ -123,11 +141,6 @@ function App() {
       })
   }
 
-  const [movies, setMovies] = useState(null);
-  const [filtredMovieArray, setFiltredMovieArray] = useState([]);
-  const [isThumblerActive, setIsThumblerActive] = useState(false);
-
-  const [moviesNotFind, setMoviesNotFind] = useState(false);
 
   function handleInputChange(e) {
     setQuery(e.target.value)
@@ -136,6 +149,8 @@ function App() {
   function handleInputSavedMoviesChange(e) {
     setQuerySavedMovies(e.target.value)
   }
+
+  // Функционал для основных фильмов
 
   useEffect(() => {
     if (!movies && (query.length > 0 || isThumblerActive)) {
@@ -155,7 +170,10 @@ function App() {
       return [];
     }
 
-    return movies.filter((items) => items.nameRU.toLowerCase().includes(query.toLowerCase())).filter((items) => (!isThumblerActive || items.duration < 40))
+    return movies.filter((items) => items.nameRU.toLowerCase().includes(query.toLowerCase())).filter((items) => {
+
+      return (!isThumblerActive || items.duration < 40)
+    })
 
   }, [movies, query, isThumblerActive])
 
@@ -177,6 +195,8 @@ function App() {
     localStorage.setItem('thumbler', !isThumblerActive);
   }
 
+  // Функционал для сохраненных фильмов
+
   useEffect(() => {
     mainApi.getUserMovies()
       .then((res) => {
@@ -187,8 +207,6 @@ function App() {
       .catch((err) => console.log(`${err}`));
   }, [])
 
-  const [filteredSavedList, setFilteredSavedList] = useState([]);
-  const [isChecked, setIsChecked] = useState(false);
 
   const toggleCheck = () => {
     setIsChecked(!isChecked)
@@ -211,6 +229,8 @@ function App() {
     }, 600)
   }
 
+  // Фильтрация в моменте для сохраненных фильмов
+
   useEffect(() => {
 
     if (isChecked) {
@@ -218,6 +238,7 @@ function App() {
     } else (
       setFilteredSavedList(savedMoviesList))
   }, [savedMoviesList, querySavedMovies, isChecked])
+
 
   const onMovieSave = (data) => {
     mainApi.setUserMovies(data)
@@ -248,10 +269,7 @@ function App() {
     }))
   }
 
-
-  const localFiltredMovie = localStorage.getItem('moviesFiltered');
-  const localQuery = localStorage.getItem('query');
-  const localThumbler = JSON.parse(localStorage.getItem('thumbler'));
+  // Установка значений из хранилища
 
   useEffect(() => {
 
