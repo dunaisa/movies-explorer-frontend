@@ -6,16 +6,8 @@ const PageNotFound = () => {
 
   const history = useHistory();
 
-  // useEffect(() => {
-  //   window.onbeforeunload = () => {
-  //     window.sessionStorage.setItem('lastRoute', JSON.stringify(window.location.pathname))
-  //   }
-  //   navigate.push(JSON.parse(window.sessionStorage.getItem('lastRoute') || '{}'))
-  // }, [])
-
   const comeBack = () => {
-    // console.log(history.length)
-    // history.length > 49 ? history.goBack() : history.push('/');
+    history.length > 1 ? history.goBack() : history.push('/');
   }
 
   return (
