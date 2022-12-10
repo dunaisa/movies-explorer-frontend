@@ -1,5 +1,3 @@
-import { BASE_URL } from '../constants/constants';
-
 class MainApi {
   constructor({ url }) {
     this._url = url;
@@ -107,7 +105,7 @@ class MainApi {
 }
 
 export const mainApi = new MainApi({
-  url: BASE_URL,
+  url: 'https://api.beatfilm-movies.nomoredomains.icu',
   headers: {
     authorization: `Bearer ${localStorage.getItem('token')}`,
     'Content-Type': 'application/json'
