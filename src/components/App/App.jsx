@@ -195,6 +195,14 @@ function App() {
     localStorage.setItem('thumbler', !isThumblerActive);
   }
 
+  // useEffect(() => {
+  //   if (isThumblerActive) {
+
+  //     setFiltredMovieArray(filteredMovies)
+  //   }
+
+  // }, [filteredMovies, isThumblerActive])
+
   // Функционал для сохраненных фильмов
 
   useEffect(() => {
