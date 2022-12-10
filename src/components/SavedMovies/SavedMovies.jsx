@@ -7,6 +7,8 @@ import Preloader from '../../components/Preloader/Preloader';
 
 const SavedMovies = ({ newMoviesList, onMovieDelete, isChecked, toggleThumbler, handleShortMovies, onSearch, onChange, query, isLoading, moviesNotFind }) => {
 
+  // setValues, quertySavedMovies, handleSubmit
+
   return (
     <>
 
