@@ -1,7 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import './SearchForm.css';
-import { useFormWithValidation } from '../../utils/useForm';
 import btnIcon from '../../images/search-form-icon.svg';
 
 const SearchForm = ({ onSearch, onChange, query, isThumblerActive, toggleThumbler }) => {

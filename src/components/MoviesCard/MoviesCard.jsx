@@ -25,6 +25,12 @@ const MoviesCard = ({ movie, onMouseEnter, onMouseLeave, isLiked, onMovieSave, o
     }
   }
 
+  const durationChange = (time) => {
+    const hours = Math.trunc(time / 60);
+    const minutes = time % 60;
+    return `${hours > 0 ? `${hours} ч ` : ''}${minutes} мин`;
+  }
+
   return (
     <li className="movie" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} >
       <a href={movie.trailerLink} className="movie__link" target="_blank" rel="noreferrer">
@@ -36,7 +42,7 @@ const MoviesCard = ({ movie, onMouseEnter, onMouseLeave, isLiked, onMovieSave, o
 
           {location.pathname === "/movies" ? <button className={likeBtn} type="button" onClick={toggleLike}></button> : <button className={deleteBtn} type="button" onClick={hadleMovieDelete}></button>}
         </div>
-        <span className="movie__duration">{movie.duration} мин</span>
+        <span className="movie__duration">{durationChange(movie.duration)}</span>
       </div>
     </li>
   );

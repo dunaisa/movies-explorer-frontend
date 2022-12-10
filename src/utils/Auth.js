@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://api.beatfilm-movies.nomoredomains.icu';
+import { BASE_URL } from '../constants/constants';
 
 const checkResponse = (res) => {
   if (res.ok) {

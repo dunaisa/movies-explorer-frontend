@@ -15,6 +15,7 @@ import { moviesApi } from '../../utils/MoviesApi';
 import { mainApi } from '../../utils/MainApi';
 import * as auth from '../../utils/Auth';
 import ProtectedRouteAuth from '../ProtectedRouteAuth.jsx';
+import { SHORT_MOVIE_DURATION } from '../../constants/constants';
 
 function App() {
 
@@ -168,7 +169,7 @@ function App() {
     if (!movies) {
       return [];
     } else {
-      return movies.filter((items) => items.nameRU.toLowerCase().includes(query.toLowerCase())).filter((items) => (!isThumblerActive || items.duration < 40))
+      return movies.filter((items) => items.nameRU.toLowerCase().includes(query.toLowerCase())).filter((items) => (!isThumblerActive || items.duration < SHORT_MOVIE_DURATION))
     }
 
   }, [movies, query, isThumblerActive])
@@ -191,7 +192,7 @@ function App() {
     }, 2000)
   }
 
-  const filterShortFilm = (moviesToFilter) => moviesToFilter.filter((item) => item.duration < 40);
+  const filterShortFilm = (moviesToFilter) => moviesToFilter.filter((item) => item.duration < SHORT_MOVIE_DURATION);
 
   // useEffect(() => {
   //   if (isThumblerActive && filtredMovieArray !== null) {
@@ -228,7 +229,7 @@ function App() {
       console.log('установили фильмы')
       return savedMoviesList
     }
-    return savedMoviesList.filter((movies) => movies.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase())).filter((movies) => (!isChecked || movies.duration < 40));
+    return savedMoviesList.filter((movies) => movies.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase())).filter((movies) => (!isChecked || movies.duration < SHORT_MOVIE_DURATION));
 
   }, [savedMoviesList, querySavedMovies, isChecked])
 
@@ -281,6 +282,7 @@ function App() {
 
     if (localFiltredMovie === null && localQuery === null) {
       console.log('ok')
+      setQuery('')
       setFiltredMovieArray([])
     } else if (localFiltredMovie.length === 0 && localQuery.length > 0) {
       console.log(localThumbler)
@@ -301,7 +303,7 @@ function App() {
       setIsloading(false)
       setIsThumblerActive(localThumbler)
     }
-  }, [])
+  }, [loggedIn])
 
   // useEffect(() => {
   //   console.log(localQuery)
