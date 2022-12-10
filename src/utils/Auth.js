@@ -1,4 +1,5 @@
-export const BASE_URL = 'http://localhost:3001';
+// export const BASE_URL = 'http://api.beatfilm-movies.nomoredomains.icu/';
+import { BASE_URL } from '../constants/constants';
 
 const checkResponse = (res) => {
   if (res.ok) {

@@ -35,7 +35,7 @@ const SearchForm = ({ onSearch, onChange, query, isThumblerActive, toggleThumble
           placeholder="Фильмы"
           id="query"
           type="text"
-          value={query}
+          value={query || ''}
           onChange={onChange} />
         <span className="search-form__text search-form__text_type_error">{errors.query && errors.query.message}</span>
 

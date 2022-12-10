@@ -141,7 +141,6 @@ function App() {
       })
   }
 
-
   function handleInputChange(e) {
     setQuery(e.target.value)
   }
@@ -168,12 +167,9 @@ function App() {
   const filteredMovies = useMemo(() => {
     if (!movies) {
       return [];
+    } else {
+      return movies.filter((items) => items.nameRU.toLowerCase().includes(query.toLowerCase())).filter((items) => (!isThumblerActive || items.duration < 40))
     }
-
-    return movies.filter((items) => items.nameRU.toLowerCase().includes(query.toLowerCase())).filter((items) => {
-
-      return (!isThumblerActive || items.duration < 40)
-    })
 
   }, [movies, query, isThumblerActive])
 
@@ -182,13 +178,28 @@ function App() {
     setTimeout(() => {
       localStorage.setItem('query', `${query}`);
       localStorage.setItem('moviesFiltered', JSON.stringify(filteredMovies));
-      console.log('спустила на стр')
 
-      setFiltredMovieArray(filteredMovies);
+      if (filteredMovies.length === 0) {
+        console.log('ok')
+        setMoviesNotFind(true)
+      } else {
+        setMoviesNotFind(false)
+        setFiltredMovieArray(filteredMovies);
+      }
 
       setIsloading(false);
     }, 2000)
   }
+
+  const filterShortFilm = (moviesToFilter) => moviesToFilter.filter((item) => item.duration < 40);
+
+  // useEffect(() => {
+  //   if (isThumblerActive && filtredMovieArray !== null) {
+  //     setFiltredMovieArray(movies.filter((items) => items.nameRU.toLowerCase().includes(query.toLowerCase())).filter((items) => items.duration < 40))
+  //   } else {
+  //     setFiltredMovieArray(filteredMovies)
+  //   }
+  // }, [isThumblerActive, filteredMovies, filtredMovieArray])
 
   const toggleThumbler = () => {
     setIsThumblerActive(!isThumblerActive);
@@ -214,6 +225,7 @@ function App() {
 
   const filteredSavedMovies = useMemo(() => {
     if (querySavedMovies.length === 0 && isChecked) {
+      console.log('установили фильмы')
       return savedMoviesList
     }
     return savedMoviesList.filter((movies) => movies.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase())).filter((movies) => (!isChecked || movies.duration < 40));
@@ -223,22 +235,16 @@ function App() {
   const handleSavedMovieSearch = () => {
     setIsloading(true);
     setTimeout(() => {
-      setFilteredSavedList(filteredSavedMovies);
+      if (filteredSavedMovies.length === 0) {
+        setMoviesNotFind(true)
+      } else {
+        setMoviesNotFind(false)
+        setFilteredSavedList(filteredSavedMovies);
+      }
 
       setIsloading(false);
     }, 600)
   }
-
-  // Фильтрация в моменте для сохраненных фильмов
-
-  useEffect(() => {
-
-    if (isChecked) {
-      setFilteredSavedList(savedMoviesList.filter((movies) => movies.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase())).filter((movies) => (!isChecked || movies.duration < 40)))
-    } else (
-      setFilteredSavedList(savedMoviesList))
-  }, [savedMoviesList, querySavedMovies, isChecked])
-
 
   const onMovieSave = (data) => {
     mainApi.setUserMovies(data)
@@ -274,14 +280,20 @@ function App() {
   useEffect(() => {
 
     if (localFiltredMovie === null && localQuery === null) {
+      console.log('ok')
       setFiltredMovieArray([])
-    } else if (JSON.parse(localFiltredMovie).length === 0 && localQuery.length > 0) {
+    } else if (localFiltredMovie.length === 0 && localQuery.length > 0) {
+      console.log(localThumbler)
+      console.log('ok2')
       setIsloading(true)
       setQuery(localQuery)
       setIsloading(false)
       setIsThumblerActive(localThumbler)
       setMoviesNotFind(true)
     } else {
+      console.log('ok3')
+      console.log(JSON.parse(localFiltredMovie))
+      console.log(localQuery)
       setMoviesNotFind(false)
       setIsloading(true)
       setQuery(localQuery)
@@ -289,7 +301,17 @@ function App() {
       setIsloading(false)
       setIsThumblerActive(localThumbler)
     }
-  }, [localFiltredMovie, localQuery, localThumbler])
+  }, [])
+
+  // useEffect(() => {
+  //   console.log(localQuery)
+  //   if (localQuery) {
+  //     setQuery(localQuery)
+  //     setIsThumblerActive(localThumbler)
+  //     setFiltredMovieArray(JSON.parse(localFiltredMovie))
+  //   }
+
+  // }, [localQuery])
 
   const signOut = () => {
     localStorage.clear();
@@ -307,9 +329,9 @@ function App() {
 
         <Route exact path="/" component={Main} />
 
-        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} />
+        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={isThumblerActive ? filterShortFilm(filtredMovieArray) : filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} />
 
-        <ProtectedRoute exact path="/saved-movies" component={SavedMovies} loggedIn={loggedIn} newMoviesList={filteredSavedList} onMovieDelete={onMovieDelete} onSearch={handleSavedMovieSearch} onChange={handleInputSavedMoviesChange} query={querySavedMovies} isChecked={isChecked} toggleThumbler={toggleCheck} isLoading={isLoading} moviesNotFind={moviesNotFind} />
+        <ProtectedRoute exact path="/saved-movies" component={SavedMovies} loggedIn={loggedIn} newMoviesList={isChecked ? filterShortFilm(filteredSavedList) : filteredSavedMovies} onMovieDelete={onMovieDelete} onSearch={handleSavedMovieSearch} onChange={handleInputSavedMoviesChange} query={querySavedMovies} isChecked={isChecked} toggleThumbler={toggleCheck} isLoading={isLoading} moviesNotFind={moviesNotFind} />
 
         <ProtectedRoute exact path="/profile" component={Profile} loggedIn={loggedIn} onEdit={handleEditProfile} signOut={signOut} isError={isError} errorMessage={errorMessage} />
 
@@ -330,7 +352,3 @@ function App() {
 }
 
 export default App;
-
-////////////////////////////////////////////////////////
-
-
