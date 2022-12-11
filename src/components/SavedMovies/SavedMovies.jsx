@@ -3,30 +3,23 @@ import './SavedMovies.css';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import MoviesCard from '../MoviesCard/MoviesCard';
-import Preloader from '../../components/Preloader/Preloader';
 
-const SavedMovies = ({ newMoviesList, onMovieDelete, isChecked, toggleThumbler, handleShortMovies, onSearch, onChange, query, isLoading, moviesNotFind }) => {
-
-  // setValues, quertySavedMovies, handleSubmit
+const SavedMovies = ({ newMoviesList, onMovieDelete, handleShortMovies, isMainPage, onSavedInputChange, handleCheckBoxChange }) => {
 
   return (
     <>
 
-      <SearchForm isThumblerActive={isChecked} toggleThumbler={toggleThumbler} handleShortMovies={handleShortMovies} onSearch={onSearch} onChange={onChange} query={query} />
+      <SearchForm handleShortMovies={handleShortMovies} isMainPage={isMainPage} onSavedInputChange={onSavedInputChange} handleCheckBoxChange={handleCheckBoxChange} />
 
-      {isLoading && <Preloader />}
-
-
-
-      {moviesNotFind ? <span className="movies__not-found-text">Ничего не найдено</span> :
-        (!isLoading && <MoviesCardList>
+      {
+        <MoviesCardList>
           {newMoviesList.map((movieSave) => (
 
             <MoviesCard key={movieSave._id} movie={movieSave} onMovieDelete={onMovieDelete} />
 
           ))}
 
-        </MoviesCardList>)}
+        </MoviesCardList>}
 
     </>
   );

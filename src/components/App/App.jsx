@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallBack } from 'react';
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext.js';
 import Register from "../Register/Register";
@@ -35,7 +35,6 @@ function App() {
 
   const [query, setQuery] = useState('');
   const [movies, setMovies] = useState(null);
-  const [filtredMovieArray, setFiltredMovieArray] = useState([]);
   const [isThumblerActive, setIsThumblerActive] = useState(false);
 
   // Стейты для сохраненных фильмов
@@ -50,10 +49,6 @@ function App() {
   const localFiltredMovie = localStorage.getItem('moviesFiltered');
   const localQuery = localStorage.getItem('query');
   const localThumbler = JSON.parse(localStorage.getItem('thumbler'));
-
-  // Стейт "фильмы не найдены"
-
-  const [moviesNotFind, setMoviesNotFind] = useState(false);
 
   useEffect(() => {
     const path = location.pathname;
@@ -142,57 +137,62 @@ function App() {
       })
   }
 
-  function handleInputChange(e) {
-    setQuery(e.target.value)
-  }
-
-  function handleInputSavedMoviesChange(e) {
-    setQuerySavedMovies(e.target.value)
-  }
-
   // Функционал для основных фильмов
 
+  // Установка значений в инпут, чекбокс через хендлер
+
+  const handleInputChange = (value) => {
+    setQuery(value)
+    localStorage.setItem('query', value);
+  }
+
+  const handleThumblerChange = (state) => {
+    setIsThumblerActive(JSON.parse(state))
+    localStorage.setItem('thumbler', JSON.parse(state));
+  }
+
+  // Получение фильмов с бит-мувис
+
   useEffect(() => {
-    if (!movies && (query.length > 0 || isThumblerActive)) {
+    if (!movies && (!!query || isThumblerActive)) {
 
-      moviesApi.getMovies()
-        .then((res) => {
-          localStorage.setItem('movies', JSON.stringify(res));
-          setMovies(res);
-        })
-        .catch((err) => console.log(`${err}`))
+      if (localStorage.getItem('movies')) {
+        setMovies(JSON.parse(localStorage.getItem('movies')));
+      } else {
 
+        moviesApi.getMovies()
+          .then((res) => {
+            setMovies(res)
+            localStorage.setItem('movies', JSON.stringify(res));
+          })
+          .catch((err) => console.log(`${err}`));
+      }
     }
   }, [movies, query, isThumblerActive])
 
+  // Мемоизация фильтрованных фильмов
+
   const filteredMovies = useMemo(() => {
+
     if (!movies) {
       return [];
     } else {
-      return movies.filter((items) => items.nameRU.toLowerCase().includes(query.toLowerCase())).filter((items) => (!isThumblerActive || items.duration < SHORT_MOVIE_DURATION))
+      // return movies.filter((items) => items.nameRU.toLowerCase().includes(query.toLowerCase())).filter((items) => (!isThumblerActive || items.duration < SHORT_MOVIE_DURATION))
+      return movies.filter((items) => {
+        if (isThumblerActive) {
+          const shortMovies = (items.nameRU.toLowerCase().includes(query.toLowerCase()) && items.duration < SHORT_MOVIE_DURATION)
+          return shortMovies
+        } else {
+          const allMovies = items.nameRU.toLowerCase().includes(query.toLowerCase())
+          return allMovies
+        }
+      })
     }
 
   }, [movies, query, isThumblerActive])
 
-  const handleMovieSearch = () => {
-    setIsloading(true);
-    setTimeout(() => {
-      localStorage.setItem('query', `${query}`);
-      localStorage.setItem('moviesFiltered', JSON.stringify(filteredMovies));
 
-      if (filteredMovies.length === 0) {
-        console.log('ok')
-        setMoviesNotFind(true)
-      } else {
-        setMoviesNotFind(false)
-        setFiltredMovieArray(filteredMovies);
-      }
-
-      setIsloading(false);
-    }, 2000)
-  }
-
-  const filterShortFilm = (moviesToFilter) => moviesToFilter.filter((item) => item.duration < SHORT_MOVIE_DURATION);
+  // const filterShortFilm = (moviesToFilter) => moviesToFilter.filter((item) => item.duration < SHORT_MOVIE_DURATION);
 
   // useEffect(() => {
   //   if (isThumblerActive && filtredMovieArray !== null) {
@@ -201,11 +201,9 @@ function App() {
   //     setFiltredMovieArray(filteredMovies)
   //   }
   // }, [isThumblerActive, filteredMovies, filtredMovieArray])
-
-  const toggleThumbler = () => {
-    setIsThumblerActive(!isThumblerActive);
-    localStorage.setItem('thumbler', !isThumblerActive);
-  }
+  // const toggleThumbler = useCallBack((state) => {
+  //   setIsThumblerActive(state);
+  // }, [])
 
   // Функционал для сохраненных фильмов
 
@@ -219,33 +217,35 @@ function App() {
       .catch((err) => console.log(`${err}`));
   }, [])
 
-
-  const toggleCheck = () => {
-    setIsChecked(!isChecked)
+  const onSavedInputChange = (value) => {
+    setQuerySavedMovies(value)
   }
 
+  const handleCheckBoxChange = (state) => {
+    setIsChecked(state)
+  }
+
+  // Мемоизация сохраненных фильмов
+
   const filteredSavedMovies = useMemo(() => {
-    if (querySavedMovies.length === 0 && isChecked) {
-      console.log('установили фильмы')
+    if (querySavedMovies.length === 0 && !isChecked) {
       return savedMoviesList
+    } else {
+      return savedMoviesList.filter((items) => {
+        if (isChecked) {
+          const shortMovies = (items.nameRU.toLowerCase().includes(query.toLowerCase()) && items.duration < SHORT_MOVIE_DURATION)
+          return shortMovies
+        } else {
+          const allMovies = items.nameRU.toLowerCase().includes(query.toLowerCase())
+          return allMovies
+        }
+        // return savedMoviesList.filter((movies) => movies.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase())).filter((movies) => (!isChecked || movies.duration < SHORT_MOVIE_DURATION));
+      })
     }
-    return savedMoviesList.filter((movies) => movies.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase())).filter((movies) => (!isChecked || movies.duration < SHORT_MOVIE_DURATION));
 
   }, [savedMoviesList, querySavedMovies, isChecked])
 
-  const handleSavedMovieSearch = () => {
-    setIsloading(true);
-    setTimeout(() => {
-      if (filteredSavedMovies.length === 0) {
-        setMoviesNotFind(true)
-      } else {
-        setMoviesNotFind(false)
-        setFilteredSavedList(filteredSavedMovies);
-      }
-
-      setIsloading(false);
-    }, 600)
-  }
+  // Сохранение фильмов
 
   const onMovieSave = (data) => {
     mainApi.setUserMovies(data)
@@ -258,6 +258,8 @@ function App() {
   useEffect(() => {
     setSavedMoviesIds(savedMoviesList.map((film) => film.movieId))
   }, [savedMoviesList])
+
+  // Удаление фильмов
 
   const onMovieDelete = (_id) => {
     mainApi.deleteMovie(_id)
@@ -276,45 +278,6 @@ function App() {
     }))
   }
 
-  // Установка значений из хранилища
-
-  useEffect(() => {
-
-    if (localFiltredMovie === null && localQuery === null) {
-      console.log('ok')
-      setQuery('')
-      setFiltredMovieArray([])
-    } else if (localFiltredMovie.length === 0 && localQuery.length > 0) {
-      console.log(localThumbler)
-      console.log('ok2')
-      setIsloading(true)
-      setQuery(localQuery)
-      setIsloading(false)
-      setIsThumblerActive(localThumbler)
-      setMoviesNotFind(true)
-    } else {
-      console.log('ok3')
-      console.log(JSON.parse(localFiltredMovie))
-      console.log(localQuery)
-      setMoviesNotFind(false)
-      setIsloading(true)
-      setQuery(localQuery)
-      setFiltredMovieArray(JSON.parse(localFiltredMovie))
-      setIsloading(false)
-      setIsThumblerActive(localThumbler)
-    }
-  }, [loggedIn])
-
-  // useEffect(() => {
-  //   console.log(localQuery)
-  //   if (localQuery) {
-  //     setQuery(localQuery)
-  //     setIsThumblerActive(localThumbler)
-  //     setFiltredMovieArray(JSON.parse(localFiltredMovie))
-  //   }
-
-  // }, [localQuery])
-
   const signOut = () => {
     localStorage.clear();
     setLoggedIn(false);
@@ -331,9 +294,9 @@ function App() {
 
         <Route exact path="/" component={Main} />
 
-        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} onSearch={handleMovieSearch} onChange={handleInputChange} query={query} isThumblerActive={isThumblerActive} toggleThumbler={toggleThumbler} isLoading={isLoading} moviesList={isThumblerActive ? filterShortFilm(filtredMovieArray) : filtredMovieArray} moviesNotFind={moviesNotFind} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} />
+        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} handleInputChange={handleInputChange} handleThumblerChange={handleThumblerChange} isLoading={isLoading} setIsloading={setIsloading} moviesList={filteredMovies} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} isMainPage={true} />
 
-        <ProtectedRoute exact path="/saved-movies" component={SavedMovies} loggedIn={loggedIn} newMoviesList={isChecked ? filterShortFilm(filteredSavedList) : filteredSavedMovies} onMovieDelete={onMovieDelete} onSearch={handleSavedMovieSearch} onChange={handleInputSavedMoviesChange} query={querySavedMovies} isChecked={isChecked} toggleThumbler={toggleCheck} isLoading={isLoading} moviesNotFind={moviesNotFind} />
+        <ProtectedRoute exact path="/saved-movies" component={SavedMovies} loggedIn={loggedIn} newMoviesList={filteredSavedMovies} onMovieDelete={onMovieDelete} isLoading={isLoading} isMainPage={false} onSavedInputChange={onSavedInputChange} handleCheckBoxChange={handleCheckBoxChange} />
 
         <ProtectedRoute exact path="/profile" component={Profile} loggedIn={loggedIn} onEdit={handleEditProfile} signOut={signOut} isError={isError} errorMessage={errorMessage} />
 

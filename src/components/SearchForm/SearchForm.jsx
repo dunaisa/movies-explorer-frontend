@@ -1,42 +1,76 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState, useEffect } from 'react';
 import './SearchForm.css';
 import btnIcon from '../../images/search-form-icon.svg';
 
-const SearchForm = ({ onSearch, onChange, query, isThumblerActive, toggleThumbler }) => {
+const SearchForm = ({ handleInputChange, handleThumblerChange, handleFirstPageLoad, setIsloading, isMainPage, onSavedInputChange, handleCheckBoxChange }) => {
 
-  const {
-    register,
-    formState: {
-      errors,
-    },
-    handleSubmit,
-    reset
-  } = useForm({
-    mode: "onChange"
-  });
+  const localValue = localStorage.getItem('query');
+  const localThumblerState = JSON.parse(localStorage.getItem('thumbler'));
 
-  const onSearchSubmit = (values) => {
-    onSearch(values);
-    reset();
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const [inputValue, setInputValue] = useState(localValue ?? '');
+  const [isThumblerActive, setIsThumblerActive] = useState(localThumblerState ?? false);
+
+  const [inputSavedValue, setInputSavedValue] = useState('');
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleChange = (e) => {
+    setInputValue(e.target.value)
   }
+
+  const handleSavedInputChange = (e) => {
+    setInputSavedValue(e.target.value)
+  }
+
+  const toggleThumbler = () => {
+    setIsThumblerActive(!isThumblerActive);
+    handleThumblerChange(!isThumblerActive);
+  }
+
+  const toggleChecked = () => {
+    setIsChecked(!isChecked)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!inputValue) {
+      setErrorMessage('Нужно ввести ключевое слово');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 2000);
+    } else {
+      if (isMainPage) {
+        setIsloading(true)
+        setTimeout(() => {
+          handleFirstPageLoad(false)
+          handleInputChange(inputValue)
+          handleThumblerChange(isThumblerActive)
+
+          setIsloading(false)
+        }, 2000);
+      } else {
+        onSavedInputChange(inputSavedValue)
+        handleCheckBoxChange(isChecked)
+      }
+
+    }
+  };
 
   return (
     <div className="search-form">
-      <form action="post" className="search-form__container" onSubmit={handleSubmit(onSearchSubmit)} noValidate>
+      <form action="post" className="search-form__container" onSubmit={handleSubmit} noValidate>
 
         <input
-          {...register('query', {
-            required: "Нужно ввести ключевое слово.",
-
-          })}
+          name="text"
           className="search-form__input"
-          placeholder="Фильмы"
-          id="query"
           type="text"
-          value={query || ''}
-          onChange={onChange} />
-        <span className="search-form__text search-form__text_type_error">{errors.query && errors.query.message}</span>
+          placeholder="Фильм"
+          required
+          value={isMainPage ? inputValue : inputSavedValue}
+          onChange={isMainPage ? handleChange : handleSavedInputChange}
+        />
+        <span className="search-form__text search-form__text_type_error">{errorMessage}</span>
 
 
         <button className="search-form__btn" type="post">
@@ -50,8 +84,8 @@ const SearchForm = ({ onSearch, onChange, query, isThumblerActive, toggleThumble
           className="thumbler__input"
           name="thumbler"
           id="thumbler"
-          checked={isThumblerActive}
-          onChange={toggleThumbler}
+          checked={isMainPage ? isThumblerActive : isChecked}
+          onChange={isMainPage ? toggleThumbler : toggleChecked}
         />
         <label htmlFor="thumbler" className="thumbler__label">Короткометражки</label>
       </div>
@@ -60,4 +94,4 @@ const SearchForm = ({ onSearch, onChange, query, isThumblerActive, toggleThumble
   );
 }
 
-export default SearchForm;
+export default React.memo(SearchForm);
