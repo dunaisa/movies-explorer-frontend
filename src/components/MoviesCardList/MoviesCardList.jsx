@@ -15,11 +15,11 @@ const MoviesCardList = ({ children, onClickBtn, isVisible, isLoading }) => {
         {children}
       </ul>}
 
-      {location.pathname === "/movies" ? <button className={`movies__btn ${isVisible ? 'movies__btn_type_hidden' : ''}`} onClick={onClickBtn}>Еще</button> : ''}
+      {location.pathname === "/movies" ? <button className={`movies__btn ${!isVisible ? 'movies__btn_type_hidden' : ''}`} onClick={onClickBtn}>Еще</button> : ''}
 
 
     </section>
   );
 }
 
-export default MoviesCardList;
+export default React.memo(MoviesCardList);

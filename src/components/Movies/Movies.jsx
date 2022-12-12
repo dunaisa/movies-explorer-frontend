@@ -4,13 +4,8 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import SearchForm from '../SearchForm/SearchForm';
 
-const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChange, savedMoviesIds, deleteMovie, isLoading, setIsloading, isMainPage = { isMainPage } }) => {
+const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChange, savedMoviesIds, deleteMovie, isLoading, setIsloading, isMainPage, localValue, localThumblerState, isServerError, handleFirstPageLoading }) => {
 
-  const [firstLoad, setFirstLoad] = useState(true);
-
-  const handleFirstPageLoad = (state) => {
-    setFirstLoad(state)
-  }
   const [screenWidth, setScreenWidth] = useState(window.screen.availWidth)
 
   const [defaultCard, setDefaultCard] = useState(0);
@@ -41,14 +36,16 @@ const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChan
   }, [screenWidth])
 
   useEffect(() => {
-
-    if (screenWidth > 790) {
-      setSlicedArray(moviesList.slice(0, defaultCard));
-    } else if (screenWidth <= 790 && screenWidth > 450) {
-      setSlicedArray(moviesList.slice(0, defaultCard));
-    } else if (screenWidth <= 450) {
-      setSlicedArray(moviesList.slice(0, defaultCard));
+    if (moviesList !== null) {
+      if (screenWidth > 790) {
+        setSlicedArray(moviesList.slice(0, defaultCard));
+      } else if (screenWidth <= 790 && screenWidth > 450) {
+        setSlicedArray(moviesList.slice(0, defaultCard));
+      } else if (screenWidth <= 450) {
+        setSlicedArray(moviesList.slice(0, defaultCard));
+      }
     }
+
 
   }, [moviesList, defaultCard, screenWidth])
 
@@ -61,38 +58,29 @@ const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChan
       setSlicedArray(moviesList.slice(0, slicedArray.length + 2))
     }
   }
-
-  const hideButton = () => {
-    if (slicedArray) {
-      if (slicedArray.length === moviesList.length) {
-
-        return true
-      } else {
-        return false
-      }
-    }
-  }
-
+  console.log(moviesList)
   return (
     <>
 
-      <SearchForm handleInputChange={handleInputChange} handleThumblerChange={handleThumblerChange} handleFirstPageLoad={handleFirstPageLoad} setIsloading={setIsloading} isMainPage={isMainPage} />
+      <SearchForm handleInputChange={handleInputChange} handleThumblerChange={handleThumblerChange} setIsloading={setIsloading} isMainPage={isMainPage} localValue={localValue} localThumblerState={localThumblerState} handleFirstPageLoading={handleFirstPageLoading} />
 
 
-      {<MoviesCardList isLoading={isLoading} onClickBtn={showMore} isVisible={hideButton()}>
+      {<MoviesCardList isLoading={isLoading} onClickBtn={showMore} isVisible={moviesList !== null && moviesList.length > slicedArray.length}>
 
-        {moviesList.length > 0 && slicedArray.map((movie) => (
+        {!isServerError && localValue && (moviesList.length > 0) && (slicedArray.map((movie) => (
 
-          <MoviesCard key={movie.movieId} movie={movie} onMovieSave={onMovieSave} deleteMovie={deleteMovie} isLiked={savedMoviesIds.includes(movie.id)} />
+          <MoviesCard key={movie.id} movie={movie} onMovieSave={onMovieSave} deleteMovie={deleteMovie} isLiked={savedMoviesIds.includes(movie.id)} />
 
-        ))}
+        )))}
 
         {
-          firstLoad && moviesList === null && <span className="movies__not-found-text"></span>
+          !isServerError && !localValue && <span className="movies__not-found-text"></span>
         }
-
         {
-          !firstLoad && moviesList.length === 0 && <span className="movies__not-found-text">Ничего не найдено</span>
+          !isServerError && localValue && (moviesList.length === 0) && <span className="movies__not-found-text">Ничего не найдено</span>
+        }
+        {
+          isServerError && <span className="movies__not-found-text">Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.</span>
         }
 
       </MoviesCardList>}

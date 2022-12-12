@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './SearchForm.css';
 import btnIcon from '../../images/search-form-icon.svg';
 
-const SearchForm = ({ handleInputChange, handleThumblerChange, handleFirstPageLoad, setIsloading, isMainPage, onSavedInputChange, handleCheckBoxChange }) => {
-
-  const localValue = localStorage.getItem('query');
-  const localThumblerState = JSON.parse(localStorage.getItem('thumbler'));
+const SearchForm = ({ handleInputChange, handleThumblerChange, setIsloading, isMainPage, onSavedInputChange, handleCheckBoxChange, localValue, localThumblerState, handleFirstPageLoading }) => {
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -30,30 +27,36 @@ const SearchForm = ({ handleInputChange, handleThumblerChange, handleFirstPageLo
 
   const toggleChecked = () => {
     setIsChecked(!isChecked)
+    handleCheckBoxChange(!isChecked)
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!inputValue) {
-      setErrorMessage('Нужно ввести ключевое слово');
-      setTimeout(() => {
-        setErrorMessage('');
-      }, 2000);
-    } else {
-      if (isMainPage) {
+    if (isMainPage) {
+      if (!inputValue) {
+        setErrorMessage('Нужно ввести ключевое слово');
+        setTimeout(() => {
+          setErrorMessage('');
+        }, 2000);
+      } else {
+        handleFirstPageLoading(false)
         setIsloading(true)
         setTimeout(() => {
-          handleFirstPageLoad(false)
           handleInputChange(inputValue)
           handleThumblerChange(isThumblerActive)
-
           setIsloading(false)
+        }, 2000);
+      }
+    } else {
+      if (inputSavedValue.length === 0) {
+        setErrorMessage('Нужно ввести ключевое слово');
+        setTimeout(() => {
+          setErrorMessage('');
         }, 2000);
       } else {
         onSavedInputChange(inputSavedValue)
         handleCheckBoxChange(isChecked)
       }
-
     }
   };
 

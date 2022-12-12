@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallBack } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext.js';
 import Register from "../Register/Register";
@@ -19,6 +19,8 @@ import { SHORT_MOVIE_DURATION } from '../../constants/constants';
 
 function App() {
 
+  // console.log('render App')
+
   const [isCurrentUser, setCurrentUser] = useState({});
 
   const [isLoading, setIsloading] = useState(false);
@@ -34,7 +36,7 @@ function App() {
   // Стейты для всех фильмов
 
   const [query, setQuery] = useState('');
-  const [movies, setMovies] = useState(null);
+  const [movies, setMovies] = useState([]);
   const [isThumblerActive, setIsThumblerActive] = useState(false);
 
   // Стейты для сохраненных фильмов
@@ -42,13 +44,22 @@ function App() {
   const [querySavedMovies, setQuerySavedMovies] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const [savedMoviesList, setSavedMoviesList] = useState([]);
-  const [filteredSavedList, setFilteredSavedList] = useState([]);
 
   // Стейты в хранилище
 
   const localFiltredMovie = localStorage.getItem('moviesFiltered');
   const localQuery = localStorage.getItem('query');
   const localThumbler = JSON.parse(localStorage.getItem('thumbler'));
+
+  // Сообщение об ошибке
+
+  const [isServerError, setIsServerError] = useState(false);
+
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+
+  const handleFirstPageLoading = (state) => {
+    setIsFirstLoad(state)
+  }
 
   useEffect(() => {
     const path = location.pathname;
@@ -141,43 +152,56 @@ function App() {
 
   // Установка значений в инпут, чекбокс через хендлер
 
-  const handleInputChange = (value) => {
-    setQuery(value)
-    localStorage.setItem('query', value);
-  }
+  useEffect(() => {
+    if (localStorage.getItem('query') || localStorage.getItem('thumbler')) {
+      handleInputChange(localStorage.getItem('query') ?? '');
+      handleThumblerChange(JSON.parse(localStorage.getItem('thumbler')) ?? false);
+    }
+  }, [])
 
-  const handleThumblerChange = (state) => {
-    setIsThumblerActive(JSON.parse(state))
+  const handleInputChange = useCallback((value) => {
+    localStorage.setItem('query', value);
+    setQuery(value)
+
+  }, [])
+
+  const handleThumblerChange = useCallback((state) => {
     localStorage.setItem('thumbler', JSON.parse(state));
-  }
+    setIsThumblerActive(state)
+
+  }, [])
 
   // Получение фильмов с бит-мувис
 
   useEffect(() => {
-    if (!movies && (!!query || isThumblerActive)) {
+    if (!isFirstLoad) {
+      if (movies.length === 0 && (!!query || isThumblerActive)) {
+        setIsServerError(false)
+        if (localStorage.getItem('movies')) {
+          setMovies(JSON.parse(localStorage.getItem('movies')));
+        } else {
+          moviesApi.getMovies()
+            .then((res) => {
 
-      if (localStorage.getItem('movies')) {
-        setMovies(JSON.parse(localStorage.getItem('movies')));
-      } else {
-
-        moviesApi.getMovies()
-          .then((res) => {
-            setMovies(res)
-            localStorage.setItem('movies', JSON.stringify(res));
-          })
-          .catch((err) => console.log(`${err}`));
+              setMovies(res)
+              localStorage.setItem('movies', JSON.stringify(res));
+            })
+            .catch((err) => {
+              console.log(`${err}`)
+              setIsServerError(true)
+            });
+        }
       }
     }
   }, [movies, query, isThumblerActive])
 
-  // Мемоизация фильтрованных фильмов
+  // Мемоизация основных фильтрованных фильмов
 
   const filteredMovies = useMemo(() => {
 
     if (!movies) {
       return [];
     } else {
-      // return movies.filter((items) => items.nameRU.toLowerCase().includes(query.toLowerCase())).filter((items) => (!isThumblerActive || items.duration < SHORT_MOVIE_DURATION))
       return movies.filter((items) => {
         if (isThumblerActive) {
           const shortMovies = (items.nameRU.toLowerCase().includes(query.toLowerCase()) && items.duration < SHORT_MOVIE_DURATION)
@@ -191,39 +215,29 @@ function App() {
 
   }, [movies, query, isThumblerActive])
 
-
-  // const filterShortFilm = (moviesToFilter) => moviesToFilter.filter((item) => item.duration < SHORT_MOVIE_DURATION);
-
-  // useEffect(() => {
-  //   if (isThumblerActive && filtredMovieArray !== null) {
-  //     setFiltredMovieArray(movies.filter((items) => items.nameRU.toLowerCase().includes(query.toLowerCase())).filter((items) => items.duration < 40))
-  //   } else {
-  //     setFiltredMovieArray(filteredMovies)
-  //   }
-  // }, [isThumblerActive, filteredMovies, filtredMovieArray])
-  // const toggleThumbler = useCallBack((state) => {
-  //   setIsThumblerActive(state);
-  // }, [])
-
   // Функционал для сохраненных фильмов
 
   useEffect(() => {
     mainApi.getUserMovies()
       .then((res) => {
         if (res) {
+          setIsServerError(false)
           setSavedMoviesList(res)
         }
       })
-      .catch((err) => console.log(`${err}`));
+      .catch((err) => {
+        console.log(`${err}`)
+        setIsServerError(true)
+      });
   }, [])
 
-  const onSavedInputChange = (value) => {
+  const onSavedInputChange = useCallback((value) => {
     setQuerySavedMovies(value)
-  }
+  }, [])
 
-  const handleCheckBoxChange = (state) => {
+  const handleCheckBoxChange = useCallback((state) => {
     setIsChecked(state)
-  }
+  }, [])
 
   // Мемоизация сохраненных фильмов
 
@@ -233,13 +247,12 @@ function App() {
     } else {
       return savedMoviesList.filter((items) => {
         if (isChecked) {
-          const shortMovies = (items.nameRU.toLowerCase().includes(query.toLowerCase()) && items.duration < SHORT_MOVIE_DURATION)
+          const shortMovies = (items.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase()) && items.duration < SHORT_MOVIE_DURATION)
           return shortMovies
         } else {
-          const allMovies = items.nameRU.toLowerCase().includes(query.toLowerCase())
+          const allMovies = items.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase())
           return allMovies
         }
-        // return savedMoviesList.filter((movies) => movies.nameRU.toLowerCase().includes(querySavedMovies.toLowerCase())).filter((movies) => (!isChecked || movies.duration < SHORT_MOVIE_DURATION));
       })
     }
 
@@ -280,7 +293,10 @@ function App() {
 
   const signOut = () => {
     localStorage.clear();
+    setQuery('');
+    setMovies([]);
     setLoggedIn(false);
+    setIsThumblerActive(false);
     history.push('/');
   }
 
@@ -294,9 +310,9 @@ function App() {
 
         <Route exact path="/" component={Main} />
 
-        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} handleInputChange={handleInputChange} handleThumblerChange={handleThumblerChange} isLoading={isLoading} setIsloading={setIsloading} moviesList={filteredMovies} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} isMainPage={true} />
+        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} handleInputChange={handleInputChange} handleThumblerChange={handleThumblerChange} isLoading={isLoading} setIsloading={setIsloading} moviesList={filteredMovies} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} isMainPage={true} localValue={localStorage.getItem('query')} localThumblerState={JSON.parse(localStorage.getItem('thumbler'))} isServerError={isServerError} handleFirstPageLoading={handleFirstPageLoading} />
 
-        <ProtectedRoute exact path="/saved-movies" component={SavedMovies} loggedIn={loggedIn} newMoviesList={filteredSavedMovies} onMovieDelete={onMovieDelete} isLoading={isLoading} isMainPage={false} onSavedInputChange={onSavedInputChange} handleCheckBoxChange={handleCheckBoxChange} />
+        <ProtectedRoute exact path="/saved-movies" component={SavedMovies} loggedIn={loggedIn} newMoviesList={filteredSavedMovies} onMovieDelete={onMovieDelete} isLoading={isLoading} isMainPage={false} onSavedInputChange={onSavedInputChange} handleCheckBoxChange={handleCheckBoxChange} isServerError={isServerError} />
 
         <ProtectedRoute exact path="/profile" component={Profile} loggedIn={loggedIn} onEdit={handleEditProfile} signOut={signOut} isError={isError} errorMessage={errorMessage} />
 

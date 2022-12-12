@@ -4,6 +4,7 @@ import './MoviesCard.css';
 
 const MoviesCard = ({ movie, onMouseEnter, onMouseLeave, isLiked, onMovieSave, onMovieDelete, deleteMovie }) => {
 
+  // console.log('render MoviesCard')
   const location = useLocation();
 
   const movieImageLink = `https://api.nomoreparties.co/${movie.image.url}`;
@@ -48,4 +49,4 @@ const MoviesCard = ({ movie, onMouseEnter, onMouseLeave, isLiked, onMovieSave, o
   );
 }
 
-export default MoviesCard;
+export default React.memo(MoviesCard);
