@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './EditProfileForm.css';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { useFormWithValidation } from '../../utils/useForm';
@@ -7,12 +7,17 @@ const EditProfileForm = ({ onEdit, signOut, isError, errorMessage }) => {
 
   const currentUser = React.useContext(CurrentUserContext);
 
-  const { values, setValues, handleChange, errors, isValid, resetForm } = useFormWithValidation();
+  const [isInputsDisabled, setIsInputsDisabled] = useState(false);
+
+  const { values, setValues, handleChange, errors, isValid } = useFormWithValidation();
 
   const onSubmit = (evt) => {
     evt.preventDefault();
-    onEdit(values);
-    resetForm();
+    setIsInputsDisabled(true);
+    setTimeout(() => {
+      onEdit(values);
+      setIsInputsDisabled(false);
+    }, 3000)
   }
 
   useEffect(() => {
@@ -26,7 +31,7 @@ const EditProfileForm = ({ onEdit, signOut, isError, errorMessage }) => {
       <form className="edit-form__container" onSubmit={onSubmit} noValidate>
         <fieldset className="edit-form__fieldset">
 
-          <div className="edit-form__field">
+          <div className={`edit-form__field ${!isInputsDisabled ? '' : 'edit-form__field_type_disabled'}`}>
             <label htmlFor="email" className="edit-form__label">Имя</label>
 
             <input
@@ -38,12 +43,13 @@ const EditProfileForm = ({ onEdit, signOut, isError, errorMessage }) => {
               placeholder="Имя"
               id="name"
               type="text"
+              disabled={isInputsDisabled}
               required />
             <span className="edit-form__text edit-form__text_type_error">{errors.name}</span>
 
           </div>
 
-          <div className="edit-form__field">
+          <div className={`edit-form__field ${!isInputsDisabled ? '' : 'edit-form__field_type_disabled'}`}>
             <label htmlFor="email" className="edit-form__label">E-mail</label>
             <input
               value={values.email || ''}
@@ -53,6 +59,7 @@ const EditProfileForm = ({ onEdit, signOut, isError, errorMessage }) => {
               id="email"
               type="email"
               name="email"
+              disabled={isInputsDisabled}
               required />
 
             <span className="edit-form__text edit-form__text_type_error">{errors.email}</span>
@@ -65,9 +72,9 @@ const EditProfileForm = ({ onEdit, signOut, isError, errorMessage }) => {
         <button
           type="submit"
           className={`edit-form__btn ${(isValid && (values.name !== currentUser.name
-            || values.email !== currentUser.email)) ? "" : 'edit-form__btn_disabled'}`}
+            || values.email !== currentUser.email) && !isInputsDisabled) ? "" : 'edit-form__btn_disabled'}`}
           disabled={(values.name === currentUser.name
-            && values.email === currentUser.email) || !isValid}>Редактировать</button>
+            && values.email === currentUser.email) || !isValid || isInputsDisabled}>Редактировать</button>
       </form>
 
       <button className="edit-form__signout" onClick={signOut}>Выйти из аккаунта</button>
