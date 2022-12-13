@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import './MoviesCardList.css';
 import Preloader from '../../components/Preloader/Preloader';
 
-const MoviesCardList = ({ children, onClickBtn, isVisible, isLoading }) => {
+const MoviesCardList = ({ children, onClickBtn, isVisible, isLoading, moviesList, showMore, slicedArray, isFirstLoad, localValue }) => {
 
   const location = useLocation();
 
@@ -15,8 +15,8 @@ const MoviesCardList = ({ children, onClickBtn, isVisible, isLoading }) => {
         {children}
       </ul>}
 
-      {location.pathname === "/movies" ? <button className={`movies__btn ${!isVisible ? 'movies__btn_type_hidden' : ''}`} onClick={onClickBtn}>Еще</button> : ''}
 
+      {(location.pathname === "/movies" && !!moviesList && !isLoading && !!localValue) ? <button className={`movies__btn ${((moviesList.length > slicedArray.length)) ? '' : 'movies__btn_type_hidden'}`} onClick={showMore} >Еще</button> : ''}
 
     </section>
   );

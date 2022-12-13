@@ -36,7 +36,7 @@ function App() {
   // Стейты для всех фильмов
 
   const [query, setQuery] = useState('');
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState(null);
   const [isThumblerActive, setIsThumblerActive] = useState(false);
 
   // Стейты для сохраненных фильмов
@@ -55,12 +55,12 @@ function App() {
 
   const [isServerError, setIsServerError] = useState(false);
 
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  // const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-  const handleFirstPageLoading = (state) => {
-    console.log(state)
-    setIsFirstLoad(state)
-  }
+  // const handleFirstPageLoading = (state) => {
+  //   // console.log(state)
+  //   setIsFirstLoad(state)
+  // }
 
   useEffect(() => {
     const path = location.pathname;
@@ -157,7 +157,7 @@ function App() {
     if (localStorage.getItem('query') || localStorage.getItem('thumbler')) {
       handleInputChange(localStorage.getItem('query') ?? '');
       handleThumblerChange(JSON.parse(localStorage.getItem('thumbler')) ?? false);
-      setIsFirstLoad(false)
+
     }
   }, [])
 
@@ -176,8 +176,7 @@ function App() {
   // Получение фильмов с бит-мувис
 
   useEffect(() => {
-    // if (isFirstLoad) {
-    if (movies.length === 0 && (!!query || isThumblerActive)) {
+    if (!movies && (!!query || isThumblerActive)) {
       setIsServerError(false)
       if (localStorage.getItem('movies')) {
         setMovies(JSON.parse(localStorage.getItem('movies')));
@@ -195,14 +194,13 @@ function App() {
       }
     }
     // }
-  }, [movies, query, isThumblerActive, isFirstLoad])
+  }, [movies, query, isThumblerActive])
 
   // Мемоизация основных фильтрованных фильмов
 
   const filteredMovies = useMemo(() => {
-
     if (!movies) {
-      return [];
+      return null;
     } else {
       return movies.filter((items) => {
         if (isThumblerActive) {
@@ -296,7 +294,7 @@ function App() {
   const signOut = () => {
     localStorage.clear();
     setQuery('');
-    setMovies([]);
+    setMovies(null);
     setLoggedIn(false);
     setIsThumblerActive(false);
     history.push('/');
@@ -312,7 +310,7 @@ function App() {
 
         <Route exact path="/" component={Main} />
 
-        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} handleInputChange={handleInputChange} handleThumblerChange={handleThumblerChange} isLoading={isLoading} setIsloading={setIsloading} moviesList={filteredMovies} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} isMainPage={true} localValue={localStorage.getItem('query')} localThumblerState={JSON.parse(localStorage.getItem('thumbler'))} isServerError={isServerError} handleFirstPageLoading={handleFirstPageLoading} />
+        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} handleInputChange={handleInputChange} handleThumblerChange={handleThumblerChange} isLoading={isLoading} setIsloading={setIsloading} moviesList={filteredMovies} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} isMainPage={true} localValue={localStorage.getItem('query')} localThumblerState={JSON.parse(localStorage.getItem('thumbler'))} isServerError={isServerError} />
 
         <ProtectedRoute exact path="/saved-movies" component={SavedMovies} loggedIn={loggedIn} newMoviesList={filteredSavedMovies} onMovieDelete={onMovieDelete} isLoading={isLoading} isMainPage={false} onSavedInputChange={onSavedInputChange} handleCheckBoxChange={handleCheckBoxChange} isServerError={isServerError} />
 

@@ -1,16 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './Movies.css';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import SearchForm from '../SearchForm/SearchForm';
 
-const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChange, savedMoviesIds, deleteMovie, isLoading, setIsloading, isMainPage, localValue, localThumblerState, isServerError, handleFirstPageLoading }) => {
+const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChange, savedMoviesIds, deleteMovie, isLoading, setIsloading, isMainPage, localValue, localThumblerState, isServerError }) => {
+
 
   const [screenWidth, setScreenWidth] = useState(window.screen.availWidth)
 
   const [defaultCard, setDefaultCard] = useState(0);
 
   const [slicedArray, setSlicedArray] = useState([]);
+
+  const [isFirstLoad, setIsFirstLoad] = useState(false);
+
+  const handleFirstPageLoading = useCallback((state) => {
+    // console.log(state)
+    setIsFirstLoad(state)
+  }, [])
 
   const handleChangeScreen = () => {
     setScreenWidth(window.screen.width)
@@ -36,7 +44,8 @@ const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChan
   }, [screenWidth])
 
   useEffect(() => {
-    if (moviesList !== null) {
+    // console.log(!!moviesList)
+    if (!!moviesList) {
       if (screenWidth > 790) {
         setSlicedArray(moviesList.slice(0, defaultCard));
       } else if (screenWidth <= 790 && screenWidth > 450) {
@@ -46,16 +55,18 @@ const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChan
       }
     }
 
-
   }, [moviesList, defaultCard, screenWidth])
 
   const showMore = () => {
-    if (screenWidth >= 1280) {
-      setSlicedArray(moviesList.slice(0, slicedArray.length + 3))
-    } else if (screenWidth < 1280 && screenWidth >= 768) {
-      setSlicedArray(moviesList.slice(0, slicedArray.length + 2))
-    } else if (screenWidth < 768) {
-      setSlicedArray(moviesList.slice(0, slicedArray.length + 2))
+    // console.log(!!moviesList)
+    if (!!moviesList) {
+      if (screenWidth >= 1280) {
+        setSlicedArray(moviesList.slice(0, slicedArray.length + 3))
+      } else if (screenWidth < 1280 && screenWidth >= 768) {
+        setSlicedArray(moviesList.slice(0, slicedArray.length + 2))
+      } else if (screenWidth < 768) {
+        setSlicedArray(moviesList.slice(0, slicedArray.length + 2))
+      }
     }
   }
 
@@ -63,19 +74,19 @@ const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChan
     <>
       <SearchForm handleInputChange={handleInputChange} handleThumblerChange={handleThumblerChange} setIsloading={setIsloading} isMainPage={isMainPage} localValue={localValue} localThumblerState={localThumblerState} handleFirstPageLoading={handleFirstPageLoading} />
 
-      {<MoviesCardList isLoading={isLoading} onClickBtn={showMore} isVisible={moviesList !== null && moviesList.length > slicedArray.length && !isLoading}>
+      {<MoviesCardList moviesList={moviesList} isLoading={isLoading} showMore={showMore} slicedArray={slicedArray} isFirstLoad={isFirstLoad} localValue={localValue}>
 
-        {!isServerError && localValue !== null && (moviesList.length > 0) && !isLoading && (slicedArray.map((movie) => (
+        {!isServerError && !!localValue && !isLoading && !!moviesList && !isFirstLoad && (slicedArray.map((movie) => (
 
           <MoviesCard key={movie.id} movie={movie} onMovieSave={onMovieSave} deleteMovie={deleteMovie} isLiked={savedMoviesIds.includes(movie.id)} />
 
         )))}
 
         {
-          !isServerError && !localValue && !isLoading && <span className="movies__not-found-text"></span>
+          !isServerError && !localValue && !isLoading && !moviesList && <span className="movies__not-found-text"></span>
         }
         {
-          !isServerError && localValue && (moviesList.length === 0) && !isLoading && <span className="movies__not-found-text">Ничего не найдено</span>
+          !isServerError && !!localValue && !!moviesList && moviesList.length === 0 && !isLoading && <span className="movies__not-found-text">Ничего не найдено</span>
         }
         {
           isServerError && <span className="movies__not-found-text">Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.</span>
