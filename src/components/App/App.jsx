@@ -274,22 +274,18 @@ function App() {
 
   // Удаление фильмов
 
-  const onMovieDelete = (_id) => {
-    mainApi.deleteMovie(_id)
-      .then(() => {
-        setSavedMoviesList(savedMoviesList.filter((movie) => movie._id !== _id))
-      })
-      .catch((err) => console.log(`${err}`))
-  }
-
-  const deleteMovie = (_id) => {
-    const item = savedMoviesList.find((movie) => {
-      return (movie.owner === isCurrentUser._id && movie.movieId === _id)
-    })
-    setSavedMoviesList(savedMoviesList.filter((movie) => {
-      return movie !== item
-    }))
-  }
+  const onMovieDelete = (movie) => {
+    const selectedMovie = savedMoviesList.find((film) => (film.movieId === movie.id || film.movieId === movie.movieId));
+    if (selectedMovie) {
+      mainApi.deleteMovie(selectedMovie._id)
+        .then(() => {
+          setSavedMoviesList(savedMoviesList.filter((movie) => movie._id !== selectedMovie._id))
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
 
   const signOut = () => {
     localStorage.clear();
@@ -310,7 +306,7 @@ function App() {
 
         <Route exact path="/" component={Main} />
 
-        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} handleInputChange={handleInputChange} handleThumblerChange={handleThumblerChange} isLoading={isLoading} setIsloading={setIsloading} moviesList={filteredMovies} onMovieSave={onMovieSave} deleteMovie={deleteMovie} savedMoviesIds={savedMoviesIds} isMainPage={true} localValue={localStorage.getItem('query')} localThumblerState={JSON.parse(localStorage.getItem('thumbler'))} isServerError={isServerError} />
+        <ProtectedRoute exact path="/movies" component={Movies} loggedIn={loggedIn} handleInputChange={handleInputChange} handleThumblerChange={handleThumblerChange} isLoading={isLoading} setIsloading={setIsloading} moviesList={filteredMovies} onMovieSave={onMovieSave} onMovieDelete={onMovieDelete} savedMoviesIds={savedMoviesIds} isMainPage={true} localValue={localStorage.getItem('query')} localThumblerState={JSON.parse(localStorage.getItem('thumbler'))} isServerError={isServerError} />
 
         <ProtectedRoute exact path="/saved-movies" component={SavedMovies} loggedIn={loggedIn} newMoviesList={filteredSavedMovies} onMovieDelete={onMovieDelete} isLoading={isLoading} isMainPage={false} onSavedInputChange={onSavedInputChange} handleCheckBoxChange={handleCheckBoxChange} isServerError={isServerError} />
 

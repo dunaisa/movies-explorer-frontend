@@ -4,7 +4,7 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import SearchForm from '../SearchForm/SearchForm';
 
-const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChange, savedMoviesIds, deleteMovie, isLoading, setIsloading, isMainPage, localValue, localThumblerState, isServerError }) => {
+const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChange, savedMoviesIds, onMovieDelete, isLoading, setIsloading, isMainPage, localValue, localThumblerState, isServerError }) => {
 
 
   const [screenWidth, setScreenWidth] = useState(window.screen.availWidth)
@@ -78,7 +78,7 @@ const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChan
 
         {!isServerError && !!localValue && !isLoading && !!moviesList && !isFirstLoad && (slicedArray.map((movie) => (
 
-          <MoviesCard key={movie.id} movie={movie} onMovieSave={onMovieSave} deleteMovie={deleteMovie} isLiked={savedMoviesIds.includes(movie.id)} />
+          <MoviesCard key={movie.id} movie={movie} onMovieSave={onMovieSave} onMovieDelete={onMovieDelete} isLiked={savedMoviesIds.includes(movie.id)} isMainPage={isMainPage} />
 
         )))}
 

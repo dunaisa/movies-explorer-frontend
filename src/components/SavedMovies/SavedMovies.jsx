@@ -15,7 +15,7 @@ const SavedMovies = ({ newMoviesList, onMovieDelete, handleShortMovies, isMainPa
         <MoviesCardList>
           {newMoviesList.map((movieSave) => (
 
-            <MoviesCard key={movieSave._id} movie={movieSave} onMovieDelete={onMovieDelete} />
+            <MoviesCard key={movieSave._id} movie={movieSave} onMovieDelete={onMovieDelete} isMainPage={isMainPage} />
 
           ))}
 
