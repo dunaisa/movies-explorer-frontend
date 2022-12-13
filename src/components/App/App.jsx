@@ -58,6 +58,7 @@ function App() {
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const handleFirstPageLoading = (state) => {
+    console.log(state)
     setIsFirstLoad(state)
   }
 
@@ -156,6 +157,7 @@ function App() {
     if (localStorage.getItem('query') || localStorage.getItem('thumbler')) {
       handleInputChange(localStorage.getItem('query') ?? '');
       handleThumblerChange(JSON.parse(localStorage.getItem('thumbler')) ?? false);
+      setIsFirstLoad(false)
     }
   }, [])
 
@@ -174,26 +176,26 @@ function App() {
   // Получение фильмов с бит-мувис
 
   useEffect(() => {
-    if (!isFirstLoad) {
-      if (movies.length === 0 && (!!query || isThumblerActive)) {
-        setIsServerError(false)
-        if (localStorage.getItem('movies')) {
-          setMovies(JSON.parse(localStorage.getItem('movies')));
-        } else {
-          moviesApi.getMovies()
-            .then((res) => {
+    // if (isFirstLoad) {
+    if (movies.length === 0 && (!!query || isThumblerActive)) {
+      setIsServerError(false)
+      if (localStorage.getItem('movies')) {
+        setMovies(JSON.parse(localStorage.getItem('movies')));
+      } else {
+        moviesApi.getMovies()
+          .then((res) => {
 
-              setMovies(res)
-              localStorage.setItem('movies', JSON.stringify(res));
-            })
-            .catch((err) => {
-              console.log(`${err}`)
-              setIsServerError(true)
-            });
-        }
+            setMovies(res)
+            localStorage.setItem('movies', JSON.stringify(res));
+          })
+          .catch((err) => {
+            console.log(`${err}`)
+            setIsServerError(true)
+          });
       }
     }
-  }, [movies, query, isThumblerActive])
+    // }
+  }, [movies, query, isThumblerActive, isFirstLoad])
 
   // Мемоизация основных фильтрованных фильмов
 
