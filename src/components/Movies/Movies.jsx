@@ -3,11 +3,11 @@ import './Movies.css';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import SearchForm from '../SearchForm/SearchForm';
+import { LARGE_WINDOW_DISPLAY, MIDDLE_WiNDOW_DISPLAY, MIDDLE_WINDOW_SCREEN, SMALL_WiNDOW_SCREEN, MORE_BUTTON_LARGE, DEFAULT_FILMS_NUMBER_LARGE, MORE_BUTTON_MIDDLE, DEFAULT_FILMS_NUMBER_MIDDLE, DEFAULT_FILMS_NUMBER_SMALL } from '../../constants/constants';
 
 const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChange, savedMoviesIds, onMovieDelete, isLoading, setIsloading, isMainPage, localValue, localThumblerState, isServerError }) => {
 
-
-  const [screenWidth, setScreenWidth] = useState(window.screen.availWidth)
+  const [screenWidth, setScreenWidth] = useState(window.screen.width)
 
   const [defaultCard, setDefaultCard] = useState(0);
 
@@ -16,7 +16,6 @@ const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChan
   const [isFirstLoad, setIsFirstLoad] = useState(false);
 
   const handleFirstPageLoading = useCallback((state) => {
-    // console.log(state)
     setIsFirstLoad(state)
   }, [])
 
@@ -32,25 +31,24 @@ const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChan
   }, [])
 
   useEffect(() => {
-    if (screenWidth >= 1280) {
-      return setDefaultCard(12)
+    if (screenWidth >= LARGE_WINDOW_DISPLAY) {
+      return setDefaultCard(DEFAULT_FILMS_NUMBER_LARGE)
     }
-    if (screenWidth < 1280 && screenWidth >= 768) {
-      return setDefaultCard(8)
+    if (screenWidth < LARGE_WINDOW_DISPLAY && screenWidth >= MIDDLE_WiNDOW_DISPLAY) {
+      return setDefaultCard(DEFAULT_FILMS_NUMBER_MIDDLE)
     }
-    if (screenWidth < 768) {
-      return setDefaultCard(5)
+    if (screenWidth < MIDDLE_WiNDOW_DISPLAY) {
+      return setDefaultCard(DEFAULT_FILMS_NUMBER_SMALL)
     }
   }, [screenWidth])
 
   useEffect(() => {
-    // console.log(!!moviesList)
     if (!!moviesList) {
-      if (screenWidth > 790) {
+      if (screenWidth > MIDDLE_WINDOW_SCREEN) {
         setSlicedArray(moviesList.slice(0, defaultCard));
-      } else if (screenWidth <= 790 && screenWidth > 450) {
+      } else if (screenWidth <= MIDDLE_WINDOW_SCREEN && screenWidth > SMALL_WiNDOW_SCREEN) {
         setSlicedArray(moviesList.slice(0, defaultCard));
-      } else if (screenWidth <= 450) {
+      } else if (screenWidth <= SMALL_WiNDOW_SCREEN) {
         setSlicedArray(moviesList.slice(0, defaultCard));
       }
     }
@@ -58,14 +56,13 @@ const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChan
   }, [moviesList, defaultCard, screenWidth])
 
   const showMore = () => {
-    // console.log(!!moviesList)
     if (!!moviesList) {
-      if (screenWidth >= 1280) {
-        setSlicedArray(moviesList.slice(0, slicedArray.length + 3))
-      } else if (screenWidth < 1280 && screenWidth >= 768) {
-        setSlicedArray(moviesList.slice(0, slicedArray.length + 2))
-      } else if (screenWidth < 768) {
-        setSlicedArray(moviesList.slice(0, slicedArray.length + 2))
+      if (screenWidth >= LARGE_WINDOW_DISPLAY) {
+        setSlicedArray(moviesList.slice(0, slicedArray.length + MORE_BUTTON_LARGE))
+      } else if (screenWidth < LARGE_WINDOW_DISPLAY && screenWidth >= MIDDLE_WiNDOW_DISPLAY) {
+        setSlicedArray(moviesList.slice(0, slicedArray.length + MORE_BUTTON_MIDDLE))
+      } else if (screenWidth < MIDDLE_WiNDOW_DISPLAY) {
+        setSlicedArray(moviesList.slice(0, slicedArray.length + MORE_BUTTON_MIDDLE))
       }
     }
   }
@@ -76,20 +73,20 @@ const Movies = ({ moviesList, onMovieSave, handleInputChange, handleThumblerChan
 
       {<MoviesCardList moviesList={moviesList} isLoading={isLoading} showMore={showMore} slicedArray={slicedArray} isFirstLoad={isFirstLoad} localValue={localValue}>
 
-        {!isServerError && !!localValue && !isLoading && !!moviesList && !isFirstLoad && (slicedArray.map((movie) => (
+        {!isServerError && !!localValue && !isLoading && !!moviesList && !isFirstLoad ? (slicedArray.map((movie) => (
 
           <MoviesCard key={movie.id} movie={movie} onMovieSave={onMovieSave} onMovieDelete={onMovieDelete} isLiked={savedMoviesIds.includes(movie.id)} isMainPage={isMainPage} />
 
-        )))}
+        ))) : <span className="movies__not-found-text"></span>}
 
-        {
+        {/* {
           !isServerError && !localValue && !isLoading && !moviesList && <span className="movies__not-found-text"></span>
-        }
+        } */}
         {
           !isServerError && !!localValue && !!moviesList && moviesList.length === 0 && !isLoading && <span className="movies__not-found-text">Ничего не найдено</span>
         }
         {
-          isServerError && <span className="movies__not-found-text">Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.</span>
+          isServerError && !isFirstLoad && <span className="movies__not-found-text">Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.</span>
         }
 
       </MoviesCardList>}
